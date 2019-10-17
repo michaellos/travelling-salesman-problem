@@ -19,7 +19,7 @@ public class Main {
     private static void shuffleXOR(int[] cities, int n) {
         for (int i = n - 1; i >= 0; i--) {
             int id = r.nextInt(i + 1);
-            if(id != i) {
+            if (id != i) {
                 cities[id] ^= cities[i];
                 cities[i] ^= cities[id];
                 cities[id] ^= cities[i];
@@ -44,7 +44,7 @@ public class Main {
         } while (System.currentTimeMillis() - time0 < 1000 || counter < 10);
 
         Arrays.stream(cities).forEach(city -> System.out.print(city + " "));
-        float t = (float)(System.currentTimeMillis() - time0) / counter;
+        float t = (float) (System.currentTimeMillis() - time0) / counter;
         System.out.println("\nAverage time: " + t);
     }
 }
