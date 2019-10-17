@@ -1,5 +1,8 @@
 package com.company;
 
+import com.company.control.DatasetParser;
+
+import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -46,5 +49,14 @@ public class Main {
         Arrays.stream(cities).forEach(city -> System.out.print(city + " "));
         float t = (float) (System.currentTimeMillis() - time0) / counter;
         System.out.println("\nAverage time: " + t);
+
+
+        double[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File("src/main/resources/euc_2D/berlin52.tsp").getAbsolutePath());
+        for (double[] row : distanceMatrix) {
+            for (double distance : row) {
+                System.out.print(distance + " ");
+            }
+            System.out.println();
+        }
     }
 }
