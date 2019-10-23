@@ -8,22 +8,35 @@ import java.util.List;
 
 public class DatasetParser {
 
-    public static double[][] loadDatasetEuc2D(String filename) {
+    public static int[][] loadDatasetEuc2D(String filename) {
         List<Place> places = getPlacesEuc2D(filename);
         int size = places.size();
-        double[][] placesMatrix = new double[size][size];
+        int[][] placesMatrix = new int[size][size];
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (i == j) {
                     placesMatrix[i][i] = 0;
                 } else {
-                    placesMatrix[i][j] = getEuclideanDistanceBetweenTwoPlaces(places.get(i), places.get(j));
+                    placesMatrix[i][j] = (int) Math.round(getEuclideanDistanceBetweenTwoPlaces(places.get(i), places.get(j)));
                 }
             }
         }
 
         return placesMatrix;
+    }
+
+    public static int[] loadOptimalPermutation(String filename) {
+        List<Integer> optimalPermutation = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(filename)))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                optimalPermutation.add(Integer.parseInt(line));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return optimalPermutation.stream().mapToInt(Integer::intValue).toArray();
     }
 
     private static List<Place> getPlacesEuc2D(String filename) {

@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.control.DatasetParser;
+import com.company.control.ResultCalculator;
 
 import java.io.File;
 import java.util.Arrays;
@@ -51,12 +52,20 @@ public class Main {
         System.out.println("\nAverage time: " + t);
 
 
-        double[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File("src/main/resources/euc_2D/berlin52.tsp").getAbsolutePath());
-        for (double[] row : distanceMatrix) {
-            for (double distance : row) {
+        int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File("src/main/resources/instances/euc_2D/berlin52.tsp").getAbsolutePath());
+        for (int[] row : distanceMatrix) {
+            for (int distance : row) {
                 System.out.print(distance + " ");
             }
             System.out.println();
         }
+
+        int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File("src/main/resources/optimal_result/euc_2D/berlin52.opt.tour").getAbsolutePath());
+
+        int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
+        System.out.println(optimalDistance);
+
+        double similarity = ResultCalculator.calculateSolutionSimilarity(optimalPermutation, optimalPermutation);
+        System.out.println(similarity);
     }
 }
