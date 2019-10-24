@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 
+import static com.company.entity.NameConstants.*;
+
 public class Main {
 
     private static Random r = new Random();
@@ -52,7 +54,7 @@ public class Main {
         System.out.println("\nAverage time: " + t);
 
 
-        int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File("src/main/resources/instances/euc_2D/berlin52.tsp").getAbsolutePath());
+        int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + BERLIN52 + INSTANCE_EXTENSION).getAbsolutePath());
         for (int[] row : distanceMatrix) {
             for (int distance : row) {
                 System.out.print(distance + " ");
@@ -60,12 +62,16 @@ public class Main {
             System.out.println();
         }
 
-        int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File("src/main/resources/optimal_result/euc_2D/berlin52.opt.tour").getAbsolutePath());
+        int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + BERLIN52 + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
 
         int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
         System.out.println(optimalDistance);
 
         double similarity = ResultCalculator.calculateSolutionSimilarity(optimalPermutation, optimalPermutation);
         System.out.println(similarity);
+
+        for (String filename : FILENAMES) {
+            System.out.println(filename);
+        }
     }
 }
