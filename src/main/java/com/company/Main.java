@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.algorithm.GreedyAlgorithm;
 import com.company.control.DatasetParser;
 import com.company.control.ResultCalculator;
 
@@ -72,6 +73,11 @@ public class Main {
 
         for (String filename : FILENAMES) {
             System.out.println(filename);
+        }
+
+        int[] greedyPath = GreedyAlgorithm.findPathByGreedy(distanceMatrix);
+        for (int place : greedyPath) {
+            System.out.print(place + " ");
         }
     }
 }
