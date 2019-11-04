@@ -2,10 +2,12 @@ package com.company.algorithm;
 
 import java.util.Random;
 
-public class GreedyAlgorithm {
+public class GreedyHeuristicsAlgorithm {
 
-    public static int[] findPathByGreedy(int[][] distanceMatrix) {
+    public static int[] findPath(int[][] distanceMatrix) {
         int[] greedyPath = new int[distanceMatrix.length];
+
+
         int firstPlace = new Random().nextInt(distanceMatrix.length) + 1;
         greedyPath[0] = firstPlace;
         for (int i = 0; i < distanceMatrix.length; i++) {

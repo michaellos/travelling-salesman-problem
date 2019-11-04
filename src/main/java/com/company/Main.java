@@ -1,6 +1,7 @@
 package com.company;
 
-import com.company.algorithm.GreedyAlgorithm;
+import com.company.algorithm.GreedyHeuristicsAlgorithm;
+import com.company.algorithm.GreedyLocalSearchAlgorithm;
 import com.company.control.DatasetParser;
 import com.company.control.ResultCalculator;
 
@@ -14,45 +15,25 @@ public class Main {
 
     private static Random r = new Random();
 
-    private static void shuffle(int[] cities, int n) {
-        for (int i = n - 1; i >= 0; i--) {
-            int id = r.nextInt(i + 1);
-            int tmp = cities[id];
-            cities[id] = cities[i];
-            cities[i] = tmp;
-        }
-    }
-
-    private static void shuffleXOR(int[] cities, int n) {
-        for (int i = n - 1; i >= 0; i--) {
-            int id = r.nextInt(i + 1);
-            if (id != i) {
-                cities[id] ^= cities[i];
-                cities[i] ^= cities[id];
-                cities[id] ^= cities[i];
-            }
-        }
-    }
-
     public static void main(String[] args) {
 
-        int counter = 0;
-        int n = 10;
-        int[] cities = new int[n];
-        for (int i = 0; i < n; i++) {
-            cities[i] = i + 1;
-        }
-
-        long time0 = System.currentTimeMillis();
-
-        do {
-            shuffle(cities, n);
-            counter++;
-        } while (System.currentTimeMillis() - time0 < 1000 || counter < 10);
-
-        Arrays.stream(cities).forEach(city -> System.out.print(city + " "));
-        float t = (float) (System.currentTimeMillis() - time0) / counter;
-        System.out.println("\nAverage time: " + t);
+//        int counter = 0;
+//        int n = 10;
+//        int[] cities = new int[n];
+//        for (int i = 0; i < n; i++) {
+//            cities[i] = i + 1;
+//        }
+//
+//        long time0 = System.currentTimeMillis();
+//
+//        do {
+//            shuffle(cities, n);
+//            counter++;
+//        } while (System.currentTimeMillis() - time0 < 1000 || counter < 10);
+//
+//        Arrays.stream(cities).forEach(city -> System.out.print(city + " "));
+//        float t = (float) (System.currentTimeMillis() - time0) / counter;
+//        System.out.println("\nAverage time: " + t);
 
 
         int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + BERLIN52 + INSTANCE_EXTENSION).getAbsolutePath());
@@ -75,9 +56,16 @@ public class Main {
             System.out.println(filename);
         }
 
-        int[] greedyPath = GreedyAlgorithm.findPathByGreedy(distanceMatrix);
+        int[] greedyPath = GreedyHeuristicsAlgorithm.findPath(distanceMatrix);
         for (int place : greedyPath) {
             System.out.print(place + " ");
         }
+
+        int[][] distanceMatrix2 = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + BERLIN52 + INSTANCE_EXTENSION).getAbsolutePath());
+        int[] greedyPath2 = GreedyLocalSearchAlgorithm.findPath(distanceMatrix2);
+        int distance = ResultCalculator.calculateTotalDistance(greedyPath2, distanceMatrix2);
+        System.out.println("");
+        System.out.println("Gready local search: " + Integer.toString(distance));
+        System.out.print("Optimal: " + Integer.toString(optimalDistance));
     }
 }
