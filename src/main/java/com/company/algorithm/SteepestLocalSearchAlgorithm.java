@@ -1,28 +1,10 @@
 package com.company.algorithm;
 
 import com.company.control.ResultCalculator;
+
 import java.util.Random;
 
-public class GreedyLocalSearchAlgorithm {
-
-    private static void reverseSwap(int[] cities, int a, int b) {
-        while(a < b) {
-            cities[a] ^= cities[b];
-            cities[b] ^= cities[a];
-            cities[a] ^= cities[b];
-            a++;
-            b--;
-        }
-    }
-
-    private static void shuffle(int[] cities, int n) {
-        for (int i = n - 1; i >= 0; i--) {
-            int id =  new Random().nextInt(i + 1);
-            int tmp = cities[id];
-            cities[id] = cities[i];
-            cities[i] = tmp;
-        }
-    }
+public class SteepestLocalSearchAlgorithm {
 
     private static void shuffleXOR(int[] cities, int n) {
         for (int i = n - 1; i >= 0; i--) {
@@ -59,38 +41,53 @@ public class GreedyLocalSearchAlgorithm {
         return newDistance;
     }
 
+    private static void reverseSwap(int[] cities, int a, int b) {
+        while(a < b) {
+            cities[a] ^= cities[b];
+            cities[b] ^= cities[a];
+            cities[a] ^= cities[b];
+            a++;
+            b--;
+        }
+    }
+
     public static int[] findPath(int[][] distanceMatrix) {
 
         int n = distanceMatrix.length;
 
-        int[] greedyPath = new int[n];
+        int[] steepestPath = new int[n];
         for (int i = 0; i < n; i++) {
-            greedyPath[i] = i + 1;
+            steepestPath[i] = i + 1;
         }
 
-        shuffleXOR(greedyPath, n);
+        shuffleXOR(steepestPath, n);
 
-        int distance = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix);
+        int distance = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix);
         int newDistance;
+        int bestDistance = Integer.MAX_VALUE;
+        int cityA = 0;
+        int cityB = 0;
         boolean change;
 
         do {
             change = false;
             for (int i = 0;  i < n - 1; i++) {
                 for (int j = i + 1; j < n; j++) {
-                    newDistance = calculateNewDistance(distance, i, j, distanceMatrix, greedyPath);
-                    if (newDistance < distance) {
-                        distance = newDistance;
-                        reverseSwap(greedyPath, i, j);
-                        change = true;
-                        break;
+                    newDistance = calculateNewDistance(distance, i, j, distanceMatrix, steepestPath);
+                    if (newDistance < bestDistance) {
+                        bestDistance = newDistance;
+                        cityA = i;
+                        cityB = j;
                     }
                 }
-                if (change)
-                    break;
+            }
+            if (bestDistance < distance) {
+                distance = bestDistance;
+                reverseSwap(steepestPath, cityA, cityB);
+                change = true;
             }
         } while (change);
 
-        return greedyPath;
+        return steepestPath;
     }
 }

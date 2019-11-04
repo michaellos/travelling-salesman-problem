@@ -2,39 +2,18 @@ package com.company;
 
 import com.company.algorithm.GreedyHeuristicsAlgorithm;
 import com.company.algorithm.GreedyLocalSearchAlgorithm;
+import com.company.algorithm.RandomAlgorithm;
+import com.company.algorithm.SteepestLocalSearchAlgorithm;
 import com.company.control.DatasetParser;
 import com.company.control.ResultCalculator;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Random;
 
 import static com.company.entity.NameConstants.*;
 
 public class Main {
 
-    private static Random r = new Random();
-
     public static void main(String[] args) {
-
-//        int counter = 0;
-//        int n = 10;
-//        int[] cities = new int[n];
-//        for (int i = 0; i < n; i++) {
-//            cities[i] = i + 1;
-//        }
-//
-//        long time0 = System.currentTimeMillis();
-//
-//        do {
-//            shuffle(cities, n);
-//            counter++;
-//        } while (System.currentTimeMillis() - time0 < 1000 || counter < 10);
-//
-//        Arrays.stream(cities).forEach(city -> System.out.print(city + " "));
-//        float t = (float) (System.currentTimeMillis() - time0) / counter;
-//        System.out.println("\nAverage time: " + t);
-
 
         int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + BERLIN52 + INSTANCE_EXTENSION).getAbsolutePath());
         for (int[] row : distanceMatrix) {
@@ -61,11 +40,30 @@ public class Main {
             System.out.print(place + " ");
         }
 
+
         int[][] distanceMatrix2 = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + BERLIN52 + INSTANCE_EXTENSION).getAbsolutePath());
         int[] greedyPath2 = GreedyLocalSearchAlgorithm.findPath(distanceMatrix2);
-        int distance = ResultCalculator.calculateTotalDistance(greedyPath2, distanceMatrix2);
-        System.out.println("");
-        System.out.println("Gready local search: " + Integer.toString(distance));
+        int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix2);
+        int[] randomPath = RandomAlgorithm.findPath(distanceMatrix2);
+        int distanceGreedy = ResultCalculator.calculateTotalDistance(greedyPath2, distanceMatrix2);
+        int distanceSteepest = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix2);
+        int distanceRandom = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix2);
+        System.out.println();
+        System.out.println("Greedy local search: " + Integer.toString(distanceGreedy));
+        System.out.println("Steepest local search: " + Integer.toString(distanceSteepest));
+        System.out.println("Random: " + Integer.toString(distanceRandom));
         System.out.print("Optimal: " + Integer.toString(optimalDistance));
+
+
+        int counter = 0;
+        long time0 = System.currentTimeMillis();
+
+        do {
+            GreedyLocalSearchAlgorithm.findPath(distanceMatrix2);
+            counter++;
+        } while (System.currentTimeMillis() - time0 < 1000 || counter < 10);
+
+        float t = (float) (System.currentTimeMillis() - time0) / counter;
+        System.out.println("\nAverage time Greedy local search: " + t);
     }
 }
