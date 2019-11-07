@@ -2,7 +2,7 @@ package com.company.algorithm;
 
 import java.util.Random;
 
-public class GreedyHeuristicsAlgorithm {
+public class HeuristicsAlgorithm {
 
     public static int[] findPath(int[][] distanceMatrix) {
         int[][] cloneDistanceMatrix = new int[distanceMatrix.length][];

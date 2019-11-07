@@ -1,13 +1,15 @@
 package com.company;
 
-import com.company.algorithm.GreedyHeuristicsAlgorithm;
+import com.company.algorithm.HeuristicsAlgorithm;
 import com.company.algorithm.GreedyLocalSearchAlgorithm;
 import com.company.algorithm.RandomAlgorithm;
 import com.company.algorithm.SteepestLocalSearchAlgorithm;
 import com.company.control.DatasetParser;
 import com.company.control.ResultCalculator;
+import com.company.control.ResultToCsvWriter;
 
 import java.io.File;
+import java.io.IOException;
 
 import static com.company.entity.NameConstants.*;
 
@@ -40,31 +42,72 @@ public class Main {
 //            System.out.print(place + " ");
 //        }
 
-
         int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + BERLIN52 + INSTANCE_EXTENSION).getAbsolutePath());
-
-        int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
-        int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
-        int[] randomPath = RandomAlgorithm.findPath(distanceMatrix);
-        int[] heuristicPath = GreedyHeuristicsAlgorithm.findPath(distanceMatrix);
-
-        int greedyDistance = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix);
-        int steepestDistance = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix);
-        int randomDistance = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix);
-        int heuristicDistance = ResultCalculator.calculateTotalDistance(heuristicPath, distanceMatrix);
 
         int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + BERLIN52 + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
         int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
 
-        System.out.println();
-        System.out.println("Greedy local search: " + greedyDistance);
-        System.out.println("Steepest local search: " + steepestDistance);
-        System.out.println("Random: " + randomDistance);
-        System.out.println("Heuristic: " + heuristicDistance);
-        System.out.println("Optimal: " + optimalDistance);
+        //pomiar jakości
 
-
+        int greedySumResult = 0;
+        int greedyMinimumResult = Integer.MAX_VALUE;
         int counter = 0;
+        do {
+            int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+            int greedyResult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
+            greedySumResult += greedyResult;
+            if (greedyResult < greedyMinimumResult) {
+                greedyMinimumResult = greedyResult;
+            }
+            counter++;
+        } while (counter < 10);
+        float greedyAverageResult = (float) greedySumResult / counter;
+
+        int steepestSumResult = 10;
+        int steepestMinimumResult = Integer.MAX_VALUE;
+        counter = 0;
+        do {
+            int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+            int steepestResult = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix) - optimalDistance;
+            steepestSumResult += steepestResult;
+            if (steepestResult < steepestMinimumResult) {
+                steepestMinimumResult = steepestResult;
+            }
+            counter++;
+        } while (counter < 10);
+        float steepestAverageResult = (float) steepestSumResult / counter;
+
+        int randomSumResult = 0;
+        int randomMinimumResult = Integer.MAX_VALUE;
+        counter = 0;
+        do {
+            int[] randomPath = RandomAlgorithm.findPath(distanceMatrix);
+            int randomResult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
+            randomSumResult += randomResult;
+            if (randomResult < randomMinimumResult) {
+                randomMinimumResult = randomResult;
+            }
+            counter++;
+        } while (counter < 10);
+        float randomAverageResult = (float) randomSumResult / counter;
+
+        int heuristicSumResult = 0;
+        int heuristicMinimumResult = Integer.MAX_VALUE;
+        counter = 0;
+        do {
+            int[] heuristicPath = HeuristicsAlgorithm.findPath(distanceMatrix);
+            int heuristicResult = ResultCalculator.calculateTotalDistance(heuristicPath, distanceMatrix) - optimalDistance;
+            heuristicSumResult += heuristicResult;
+            if (heuristicResult < heuristicMinimumResult) {
+                heuristicMinimumResult = heuristicResult;
+            }
+            counter++;
+        } while (counter < 10);
+        float heuristicAverageResult = (float) heuristicSumResult / counter;
+
+        // pomiar czasu
+
+        counter = 0;
         long endTime;
         long startTime = System.currentTimeMillis();
         do {
@@ -73,9 +116,47 @@ public class Main {
             counter++;
         } while (endTime - startTime < 1000 || counter < 10);
 
-        System.out.println(counter);
+        float greedyAverageTime = (float) (endTime - startTime) / counter;
 
-        float t = (float) (endTime- startTime) / counter;
-        System.out.println("\nAverage time Greedy local search: " + t);
+        counter = 0;
+        startTime = System.currentTimeMillis();
+        do {
+            SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+            endTime = System.currentTimeMillis();
+            counter++;
+        } while (endTime - startTime < 1000 || counter < 10);
+
+        float steepestAverageTime = (float) (endTime - startTime) / counter;
+
+        counter = 0;
+        startTime = System.currentTimeMillis();
+        do {
+            RandomAlgorithm.findPath(distanceMatrix);
+            endTime = System.currentTimeMillis();
+            counter++;
+        } while (endTime - startTime < 1000 || counter < 10);
+
+        float randomAverageTime = (float) (endTime - startTime) / counter;
+
+        counter = 0;
+        startTime = System.currentTimeMillis();
+        do {
+            HeuristicsAlgorithm.findPath(distanceMatrix);
+            endTime = System.currentTimeMillis();
+            counter++;
+        } while (endTime - startTime < 1000 || counter < 10);
+
+        float heuristicAverageTime = (float) (endTime - startTime) / counter;
+
+        try {
+            ResultToCsvWriter resultToCsvWriter = new ResultToCsvWriter();
+            resultToCsvWriter.addRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyAverageResult, greedyMinimumResult, greedyAverageTime);
+            resultToCsvWriter.addRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestAverageResult, steepestMinimumResult, steepestAverageTime);
+            resultToCsvWriter.addRow(RandomAlgorithm.class.getSimpleName(), randomAverageResult, randomMinimumResult, randomAverageTime);
+            resultToCsvWriter.addRow(HeuristicsAlgorithm.class.getSimpleName(), heuristicAverageResult, heuristicMinimumResult, heuristicAverageTime);
+            resultToCsvWriter.saveFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
