@@ -2,18 +2,12 @@ package com.company.entity;
 
 public class Place {
 
-    private int id;
     private double xCoordinate;
     private double yCoordinate;
 
-    public Place(int id, double xCoordinate, double yCoordinate) {
-        this.id = id;
+    public Place(double xCoordinate, double yCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public double getXCoordinate() {

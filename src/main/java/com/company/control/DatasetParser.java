@@ -45,7 +45,7 @@ public class DatasetParser {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] args = line.trim().replaceAll(" +", " ").split(" ");
-                places.add(new Place(Integer.parseInt(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2])));
+                places.add(new Place(Double.parseDouble(args[1]), Double.parseDouble(args[2])));
             }
         } catch (IOException e) {
             e.printStackTrace();

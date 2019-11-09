@@ -3,12 +3,12 @@ package com.company.control;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ResultToCsvWriter {
+public class ResultTask2ToCsvWriter {
 
     private FileWriter csvWriter;
 
-    public ResultToCsvWriter() throws IOException {
-        this.csvWriter = new FileWriter("src/main/resources/out/results.csv");
+    public ResultTask2ToCsvWriter(String instance) throws IOException {
+        this.csvWriter = new FileWriter("src/main/resources/out/results_task_2_" + instance + ".csv");
 
         csvWriter.append("Algorithm")
                 .append(",")
@@ -19,10 +19,12 @@ public class ResultToCsvWriter {
                 .append("AverageTime")
                 .append(",")
                 .append("StandardDeviation")
+                .append(",")
+                .append("Efficiency")
                 .append("\n");
     }
 
-    public void addRow(String algorithm, float averageResult, int bestResult, float averageTime, double standardDeviation) throws IOException {
+    public void addRow(String algorithm, float averageResult, int bestResult, float averageTime, double standardDeviation, float efficiency) throws IOException {
         csvWriter.append(algorithm)
                 .append(",")
                 .append(String.valueOf(averageResult))
@@ -32,6 +34,8 @@ public class ResultToCsvWriter {
                 .append(String.valueOf(averageTime))
                 .append(",")
                 .append(String.valueOf(standardDeviation))
+                .append(",")
+                .append(String.valueOf(efficiency))
                 .append("\n");
     }
 

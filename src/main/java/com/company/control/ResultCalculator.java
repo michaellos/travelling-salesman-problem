@@ -14,7 +14,7 @@ public class ResultCalculator {
         return totalDistance;
     }
 
-    public static double calculateSolutionSimilarity(int[] placePermutation, int[] placeOptimalPermutation) {
+    public static double calculatePathSimilarity(int[] placePermutation, int[] placeOptimalPermutation) {
         double theSameRoad = 0;
         List<Integer> placeOptimalPermutationList = Arrays.stream(placeOptimalPermutation).boxed().collect(Collectors.toList());
         for (int i = 0; i < placePermutation.length; i++) {
