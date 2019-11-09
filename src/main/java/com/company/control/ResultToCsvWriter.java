@@ -17,10 +17,12 @@ public class ResultToCsvWriter {
                 .append("BestResult")
                 .append(",")
                 .append("AverageTime")
+                .append(",")
+                .append("StandardDeviation")
                 .append("\n");
     }
 
-    public void addRow(String algorithm, float averageResult, int bestResult, float averageTime) throws IOException {
+    public void addRow(String algorithm, float averageResult, int bestResult, float averageTime, double standardDeviation) throws IOException {
         csvWriter.append(algorithm)
                 .append(",")
                 .append(String.valueOf(averageResult))
@@ -28,6 +30,8 @@ public class ResultToCsvWriter {
                 .append(String.valueOf(bestResult))
                 .append(",")
                 .append(String.valueOf(averageTime))
+                .append(",")
+                .append(String.valueOf(standardDeviation))
                 .append("\n");
     }
 
