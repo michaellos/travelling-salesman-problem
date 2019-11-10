@@ -185,45 +185,45 @@ public class Main {
         // zad 4
 
         counter = 0;
-        greedySumResult = 0;
-        greedyMinimumResult = Integer.MAX_VALUE;
-        float[] greedyAverageResults = new float[300];
-        int[] greedyMinimumResults = new int[300];
+        int greedySumDistance = 0;
+        int greedyMinimumDistance = Integer.MAX_VALUE;
+        float[] greedyAverageDistances = new float[300];
+        int[] greedyMinimumDistances = new int[300];
         do {
             int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
-            int greedyResult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
-            greedySumResult += greedyResult;
-            if (greedyResult < greedyMinimumResult) {
-                greedyMinimumResult = greedyResult;
+            int greedyDistance = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix);
+            greedySumDistance += greedyDistance;
+            if (greedyDistance < greedyMinimumDistance) {
+                greedyMinimumDistance = greedyDistance;
             }
-            greedyAverageResults[counter] = (float) greedySumResult / (counter + 1);
-            greedyMinimumResults[counter] = greedyMinimumResult;
+            greedyAverageDistances[counter] = (float) greedySumDistance / (counter + 1);
+            greedyMinimumDistances[counter] = greedyMinimumDistance;
             counter++;
         } while (counter < 300);
 
         counter = 0;
-        steepestSumResult = 0;
-        steepestMinimumResult = Integer.MAX_VALUE;
-        float[] steepestAverageResults = new float[300];
-        int[] steepestMinimumResults = new int[300];
+        int steepestSumDistance = 0;
+        int steepestMinimumDistance = Integer.MAX_VALUE;
+        float[] steepestAverageDistances = new float[300];
+        int[] steepestMinimumDistances = new int[300];
         do {
             int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
-            int steepestResult = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix) - optimalDistance;
-            steepestSumResult += steepestResult;
-            if (steepestResult < steepestMinimumResult) {
-                steepestMinimumResult = steepestResult;
+            int steepestDistance = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix);
+            steepestSumDistance += steepestDistance;
+            if (steepestDistance < steepestMinimumDistance) {
+                steepestMinimumDistance = steepestDistance;
             }
-            steepestAverageResults[counter] = (float) steepestSumResult / (counter + 1);
-            steepestMinimumResults[counter] = steepestMinimumResult;
+            steepestAverageDistances[counter] = (float) steepestSumDistance / (counter + 1);
+            steepestMinimumDistances[counter] = steepestMinimumDistance;
             counter++;
         } while (counter < 300);
 
         try {
             ResultTask4ToCsvWriter resultTask4ToCsvWriter = new ResultTask4ToCsvWriter(instance);
-            resultTask4ToCsvWriter.addAverageResultsToRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyAverageResults);
-            resultTask4ToCsvWriter.addMinimumResultsToRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyMinimumResults);
-            resultTask4ToCsvWriter.addAverageResultsToRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestAverageResults);
-            resultTask4ToCsvWriter.addMinimumResultsToRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestMinimumResults);
+            resultTask4ToCsvWriter.addAverageDistancesToRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyAverageDistances);
+            resultTask4ToCsvWriter.addMinimumDistancesToRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyMinimumDistances);
+            resultTask4ToCsvWriter.addAverageDistancesToRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestAverageDistances);
+            resultTask4ToCsvWriter.addMinimumDistancesToRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestMinimumDistances);
             resultTask4ToCsvWriter.saveFile();
         } catch (IOException e) {
             e.printStackTrace();

@@ -15,26 +15,26 @@ public class ResultTask4ToCsvWriter {
                 .append("Type");
 
         for (int i = 0; i < 300; i++) {
-            csvWriter.append(",").append("Result ").append(String.valueOf(i + 1));
+            csvWriter.append(",").append("Distance ").append(String.valueOf(i + 1));
         }
 
         csvWriter.append("\n");
     }
 
-    public void addMinimumResultsToRow(String algorithm, int[] results) throws IOException {
+    public void addMinimumDistancesToRow(String algorithm, int[] distances) throws IOException {
         csvWriter.append(algorithm)
                 .append(",")
-                .append("MinimumResults")
+                .append("MinimumDistance")
                 .append(",")
-                .append(minimumResultsToRow(results));
+                .append(minimumResultsToRow(distances));
     }
 
-    public void addAverageResultsToRow(String algorithm, float[] results) throws IOException {
+    public void addAverageDistancesToRow(String algorithm, float[] distances) throws IOException {
         csvWriter.append(algorithm)
                 .append(",")
-                .append("AverageResults")
+                .append("AverageDistance")
                 .append(",")
-                .append(averageResultsToRow(results));
+                .append(averageResultsToRow(distances));
     }
 
     public void saveFile() throws IOException {
