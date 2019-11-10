@@ -195,7 +195,36 @@ public class Main {
 
         // zad 3
 
-        // TODO
+        counter = 0;
+        int[] greedyStartResults = new int[200];
+        int[] greedyFinalResults = new int[200];
+        do {
+            ResultEntity resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+            greedyStartResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getStartPath(), distanceMatrix) - optimalDistance;
+            greedyFinalResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getFinalPath(), distanceMatrix) - optimalDistance;
+            counter++;
+        } while (counter < 200);
+
+        counter = 0;
+        int[] steepestStartResults = new int[200];
+        int[] steepestFinalResults = new int[200];
+        do {
+            ResultEntity resultEntity = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+            steepestStartResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getStartPath(), distanceMatrix) - optimalDistance;
+            steepestFinalResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getFinalPath(), distanceMatrix) - optimalDistance;
+            counter++;
+        } while (counter < 200);
+
+        try {
+            ResultTask3ToCsvWriter resultTask3ToCsvWriter = new ResultTask3ToCsvWriter(instance);
+            resultTask3ToCsvWriter.addStartResultsToRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyStartResults);
+            resultTask3ToCsvWriter.addFinalResultsToRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyFinalResults);
+            resultTask3ToCsvWriter.addStartResultsToRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestStartResults);
+            resultTask3ToCsvWriter.addFinalResultsToRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestFinalResults);
+            resultTask3ToCsvWriter.saveFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // zad 4
 

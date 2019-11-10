@@ -26,7 +26,7 @@ public class ResultTask4ToCsvWriter {
                 .append(",")
                 .append("MinimumDistance")
                 .append(",")
-                .append(minimumResultsToRow(distances));
+                .append(minimumDistancesToRow(distances));
     }
 
     public void addAverageDistancesToRow(String algorithm, float[] distances) throws IOException {
@@ -34,7 +34,7 @@ public class ResultTask4ToCsvWriter {
                 .append(",")
                 .append("AverageDistance")
                 .append(",")
-                .append(averageResultsToRow(distances));
+                .append(averageDistancesToRow(distances));
     }
 
     public void saveFile() throws IOException {
@@ -42,17 +42,17 @@ public class ResultTask4ToCsvWriter {
         csvWriter.close();
     }
 
-    private String minimumResultsToRow(int[] results) {
+    private String minimumDistancesToRow(int[] distances) {
         StringBuilder row = new StringBuilder();
-        for (int result : results) {
+        for (int result : distances) {
             row.append(result).append(",");
         }
         return row.substring(0, row.length() - 1) + "\n";
     }
 
-    private String averageResultsToRow(float[] results) {
+    private String averageDistancesToRow(float[] distances) {
         StringBuilder row = new StringBuilder();
-        for (float result : results) {
+        for (float result : distances) {
             row.append(result).append(",");
         }
         return row.substring(0, row.length() - 1) + "\n";
