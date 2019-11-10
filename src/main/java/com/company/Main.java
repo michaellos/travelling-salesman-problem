@@ -5,6 +5,7 @@ import com.company.algorithm.GreedyLocalSearchAlgorithm;
 import com.company.algorithm.RandomAlgorithm;
 import com.company.algorithm.SteepestLocalSearchAlgorithm;
 import com.company.control.*;
+import com.company.entity.ResultEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,13 +52,18 @@ public class Main {
 
         int greedySumResult = 0;
         int greedyMinimumResult = Integer.MAX_VALUE;
+        int greedySumStepNumber = 0;
+        int greedySumVisitSolutionNumber = 0;
         int[] greedyResults = new int[10];
         int counter = 0;
         do {
-            int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+            ResultEntity resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+            int[] greedyPath = resultEntity.getFinalPath();
             int greedyResult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
             greedyResults[counter] = greedyResult;
             greedySumResult += greedyResult;
+            greedySumStepNumber += resultEntity.getStepNumber();
+            greedySumVisitSolutionNumber += resultEntity.getVisitSolutionNumber();
             if (greedyResult < greedyMinimumResult) {
                 greedyMinimumResult = greedyResult;
             }
@@ -65,16 +71,23 @@ public class Main {
         } while (counter < 10);
         float greedyAverageResult = (float) greedySumResult / counter;
         double greedyStandardDeviation = StandardDeviation.calculate(greedyResults);
+        float greedyAverageStepNumber = (float) greedySumStepNumber / counter;
+        float greedyAverageVisitSolutionNumber = (float) greedySumVisitSolutionNumber / counter;
 
-        int steepestSumResult = 10;
+        int steepestSumResult = 0;
         int steepestMinimumResult = Integer.MAX_VALUE;
+        int steepestSumStepNumber = 0;
+        int steepestSumVisitSolutionNumber = 0;
         int[] steepestResults = new int[10];
         counter = 0;
         do {
-            int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+            ResultEntity resultEntity = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+            int[] steepestPath = resultEntity.getFinalPath();
             int steepestResult = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix) - optimalDistance;
             steepestResults[counter] = steepestResult;
             steepestSumResult += steepestResult;
+            steepestSumStepNumber += resultEntity.getStepNumber();
+            steepestSumVisitSolutionNumber += resultEntity.getVisitSolutionNumber();
             if (steepestResult < steepestMinimumResult) {
                 steepestMinimumResult = steepestResult;
             }
@@ -82,6 +95,8 @@ public class Main {
         } while (counter < 10);
         float steepestAverageResult = (float) steepestSumResult / counter;
         double steepestStandardDeviation = StandardDeviation.calculate(steepestResults);
+        float steepestAverageStepNumber = (float) steepestSumStepNumber / counter;
+        float steepestAverageVisitSolutionNumber = (float) steepestSumVisitSolutionNumber / counter;
 
         int randomSumResult = 0;
         int randomMinimumResult = Integer.MAX_VALUE;
@@ -169,10 +184,10 @@ public class Main {
 
         try {
             ResultTask2ToCsvWriter resultTask2ToCsvWriter = new ResultTask2ToCsvWriter(instance);
-            resultTask2ToCsvWriter.addRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyAverageResult, greedyMinimumResult, greedyAverageTime, greedyStandardDeviation, greedyEfficiency);
-            resultTask2ToCsvWriter.addRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestAverageResult, steepestMinimumResult, steepestAverageTime, steepestStandardDeviation, steepestEfficiency);
-            resultTask2ToCsvWriter.addRow(RandomAlgorithm.class.getSimpleName(), randomAverageResult, randomMinimumResult, randomAverageTime, randomStandardDeviation, randomEfficiency);
-            resultTask2ToCsvWriter.addRow(HeuristicsAlgorithm.class.getSimpleName(), heuristicAverageResult, heuristicMinimumResult, heuristicAverageTime, heuristicStandardDeviation, heuristicEfficiency);
+            resultTask2ToCsvWriter.addRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyAverageResult, greedyMinimumResult, greedyAverageTime, greedyStandardDeviation, greedyEfficiency, greedyAverageStepNumber, greedyAverageVisitSolutionNumber);
+            resultTask2ToCsvWriter.addRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestAverageResult, steepestMinimumResult, steepestAverageTime, steepestStandardDeviation, steepestEfficiency, steepestAverageStepNumber, steepestAverageVisitSolutionNumber);
+            resultTask2ToCsvWriter.addRow(RandomAlgorithm.class.getSimpleName(), randomAverageResult, randomMinimumResult, randomAverageTime, randomStandardDeviation, randomEfficiency, 0, 0);
+            resultTask2ToCsvWriter.addRow(HeuristicsAlgorithm.class.getSimpleName(), heuristicAverageResult, heuristicMinimumResult, heuristicAverageTime, heuristicStandardDeviation, heuristicEfficiency, 0, 0);
             resultTask2ToCsvWriter.saveFile();
         } catch (IOException e) {
             e.printStackTrace();
@@ -190,7 +205,7 @@ public class Main {
         float[] greedyAverageDistances = new float[300];
         int[] greedyMinimumDistances = new int[300];
         do {
-            int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+            int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
             int greedyDistance = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix);
             greedySumDistance += greedyDistance;
             if (greedyDistance < greedyMinimumDistance) {
@@ -207,7 +222,7 @@ public class Main {
         float[] steepestAverageDistances = new float[300];
         int[] steepestMinimumDistances = new int[300];
         do {
-            int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+            int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
             int steepestDistance = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix);
             steepestSumDistance += steepestDistance;
             if (steepestDistance < steepestMinimumDistance) {
@@ -235,7 +250,7 @@ public class Main {
         double[] greedyPathSimilarities = new double[100];
         counter = 0;
         do {
-            int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+            int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
             greedyResults[counter] = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
             greedyPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(greedyPath, optimalPermutation);
             counter++;
@@ -245,7 +260,7 @@ public class Main {
         double[] steepestPathSimilarities = new double[100];
         counter = 0;
         do {
-            int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+            int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
             steepestResults[counter] = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix) - optimalDistance;
             steepestPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(steepestPath, optimalPermutation);
             counter++;

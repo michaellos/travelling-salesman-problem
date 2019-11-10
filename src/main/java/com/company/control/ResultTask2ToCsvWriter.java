@@ -21,10 +21,14 @@ public class ResultTask2ToCsvWriter {
                 .append("StandardDeviation")
                 .append(",")
                 .append("Efficiency")
+                .append(",")
+                .append("AverageStepNumber")
+                .append(",")
+                .append("AverageVisitSolutionNumber")
                 .append("\n");
     }
 
-    public void addRow(String algorithm, float averageResult, int bestResult, float averageTime, double standardDeviation, float efficiency) throws IOException {
+    public void addRow(String algorithm, float averageResult, int bestResult, float averageTime, double standardDeviation, float efficiency, float averageStepNumber, float averageVisitSolutionNumber) throws IOException {
         csvWriter.append(algorithm)
                 .append(",")
                 .append(String.valueOf(averageResult))
@@ -36,6 +40,10 @@ public class ResultTask2ToCsvWriter {
                 .append(String.valueOf(standardDeviation))
                 .append(",")
                 .append(String.valueOf(efficiency))
+                .append(",")
+                .append(String.valueOf(averageStepNumber))
+                .append(",")
+                .append(String.valueOf(averageVisitSolutionNumber))
                 .append("\n");
     }
 
