@@ -1,0 +1,5 @@
+Algorithm,AverageResult,BestResult,AverageTime,StandardDeviation,Efficiency,AverageStepNumber,AverageVisitSolutionNumber
+GreedyLocalSearchAlgorithm,44.2,32,5.451087,8.49470423263812,8.108475,338.8,468752.6
+SteepestLocalSearchAlgorithm,53.6,43,5.235602,7.977468270071652,10.2376,490.8,469650.0
+RandomAlgorithm,2863.8,2688,0.011604452,116.08944827158065,246784.61,0.0,0.0
+HeuristicsAlgorithm,190.4,148,0.06936937,33.46998655512129,2744.7273,0.0,0.0
