@@ -81,7 +81,6 @@ public class SteepestLocalSearchAlgorithm {
                     solutionCounter++;
                     if (newDistance < bestDistance) {
                         bestDistance = newDistance;
-                        stepCounter++;
                         cityA = i;
                         cityB = j;
                     }
@@ -89,6 +88,7 @@ public class SteepestLocalSearchAlgorithm {
             }
             if (bestDistance < distance) {
                 distance = bestDistance;
+                stepCounter++;
                 reverseSwap(steepestPath, cityA, cityB);
                 change = true;
             }
