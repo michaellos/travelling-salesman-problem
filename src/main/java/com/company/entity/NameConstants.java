@@ -25,7 +25,7 @@ public class NameConstants {
     public static final String RD100 = "rd100";
     public static final String TSP225 = "tsp225";
 
-    public static final List<String> FILENAMES = new ArrayList<String>() {{
+    public static final List<String> INSTANCES = new ArrayList<String>() {{
         add(A280);
         add(BERLIN52);
         add(CH130);
