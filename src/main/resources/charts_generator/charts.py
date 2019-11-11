@@ -13,7 +13,7 @@ def save_plot(plot, name):
 
 def task_4():
     data = pd.read_csv('../out/results_task_4_berlin52.csv', sep=',')
-    type_of_result = ["AverageResults", "MinimumResults"]
+    type_of_result = ["AverageDistance", "MinimumDistance"]
     alghoritm_name = ["GreedyLocalSearchAlgorithm", "SteepestLocalSearchAlgorithm"]
     for t in type_of_result:
         for algorithm in alghoritm_name:
