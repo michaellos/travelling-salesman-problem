@@ -213,6 +213,7 @@ def task_5():
             ax.set_xlabel('Jakość rozwiązania')
             ax.set_ylabel('Podobieństwo do optimum globalnego')
             ax_id += 1
+            ax.legend([algorithm])
         save_plot(plt, "T5" + i, output_folder, i + "/")
         plt.close(fig)
 
