@@ -50,6 +50,9 @@ public class Main {
             int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + instance + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
             int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
 
+            int[] startingPath = new int[distanceMatrix.length];
+            int[][] cloneDistanceMatrix = new int[distanceMatrix.length][];
+
             //pomiar jakości
 
             int greedySumResult = 0;
@@ -59,7 +62,7 @@ public class Main {
             int[] greedyResults = new int[10];
             int counter = 0;
             do {
-                ResultEntity resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+                ResultEntity resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
                 int[] greedyPath = resultEntity.getFinalPath();
                 int greedyResult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
                 greedyResults[counter] = greedyResult;
@@ -83,7 +86,7 @@ public class Main {
             int[] steepestResults = new int[10];
             counter = 0;
             do {
-                ResultEntity resultEntity = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+                ResultEntity resultEntity = SteepestLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
                 int[] steepestPath = resultEntity.getFinalPath();
                 int steepestResult = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix) - optimalDistance;
                 steepestResults[counter] = steepestResult;
@@ -105,7 +108,7 @@ public class Main {
             int[] randomResults = new int[10];
             counter = 0;
             do {
-                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix);
+                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
                 int randomResult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
                 randomResults[counter] = randomResult;
                 randomSumResult += randomResult;
@@ -122,7 +125,7 @@ public class Main {
             int[] heuristicResults = new int[10];
             counter = 0;
             do {
-                int[] heuristicPath = HeuristicsAlgorithm.findPath(distanceMatrix);
+                int[] heuristicPath = HeuristicsAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
                 int heuristicResult = ResultCalculator.calculateTotalDistance(heuristicPath, distanceMatrix) - optimalDistance;
                 heuristicResults[counter] = heuristicResult;
                 heuristicSumResult += heuristicResult;
@@ -140,7 +143,7 @@ public class Main {
             long endTime;
             long startTime = System.currentTimeMillis();
             do {
-                GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+                GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
                 endTime = System.currentTimeMillis();
                 counter++;
             } while (endTime - startTime < 1000 || counter < 10);
@@ -150,7 +153,7 @@ public class Main {
             counter = 0;
             startTime = System.currentTimeMillis();
             do {
-                SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+                SteepestLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
                 endTime = System.currentTimeMillis();
                 counter++;
             } while (endTime - startTime < 1000 || counter < 10);
@@ -160,7 +163,7 @@ public class Main {
             counter = 0;
             startTime = System.currentTimeMillis();
             do {
-                RandomAlgorithm.findPath(distanceMatrix);
+                RandomAlgorithm.findPath(distanceMatrix, startingPath);
                 endTime = System.currentTimeMillis();
                 counter++;
             } while (endTime - startTime < 1000 || counter < 10);
@@ -170,7 +173,7 @@ public class Main {
             counter = 0;
             startTime = System.currentTimeMillis();
             do {
-                HeuristicsAlgorithm.findPath(distanceMatrix);
+                HeuristicsAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
                 endTime = System.currentTimeMillis();
                 counter++;
             } while (endTime - startTime < 1000 || counter < 10);
@@ -201,7 +204,7 @@ public class Main {
             int[] greedyStartResults = new int[200];
             int[] greedyFinalResults = new int[200];
             do {
-                ResultEntity resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix);
+                ResultEntity resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
                 greedyStartResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getStartPath(), distanceMatrix) - optimalDistance;
                 greedyFinalResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getFinalPath(), distanceMatrix) - optimalDistance;
                 counter++;
@@ -211,7 +214,7 @@ public class Main {
             int[] steepestStartResults = new int[200];
             int[] steepestFinalResults = new int[200];
             do {
-                ResultEntity resultEntity = SteepestLocalSearchAlgorithm.findPath(distanceMatrix);
+                ResultEntity resultEntity = SteepestLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
                 steepestStartResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getStartPath(), distanceMatrix) - optimalDistance;
                 steepestFinalResults[counter] = ResultCalculator.calculateTotalDistance(resultEntity.getFinalPath(), distanceMatrix) - optimalDistance;
                 counter++;
@@ -236,7 +239,7 @@ public class Main {
             float[] greedyAverageDistances = new float[300];
             int[] greedyMinimumDistances = new int[300];
             do {
-                int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
+                int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath).getFinalPath();
                 int greedyDistance = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix);
                 greedySumDistance += greedyDistance;
                 if (greedyDistance < greedyMinimumDistance) {
@@ -253,7 +256,7 @@ public class Main {
             float[] steepestAverageDistances = new float[300];
             int[] steepestMinimumDistances = new int[300];
             do {
-                int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
+                int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix, startingPath).getFinalPath();
                 int steepestDistance = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix);
                 steepestSumDistance += steepestDistance;
                 if (steepestDistance < steepestMinimumDistance) {
@@ -281,7 +284,7 @@ public class Main {
             double[] greedyPathSimilarities = new double[100];
             counter = 0;
             do {
-                int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
+                int[] greedyPath = GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath).getFinalPath();
                 greedyResults[counter] = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
                 greedyPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(greedyPath, optimalPermutation);
                 counter++;
@@ -291,7 +294,7 @@ public class Main {
             double[] steepestPathSimilarities = new double[100];
             counter = 0;
             do {
-                int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix).getFinalPath();
+                int[] steepestPath = SteepestLocalSearchAlgorithm.findPath(distanceMatrix, startingPath).getFinalPath();
                 steepestResults[counter] = ResultCalculator.calculateTotalDistance(steepestPath, distanceMatrix) - optimalDistance;
                 steepestPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(steepestPath, optimalPermutation);
                 counter++;
@@ -301,7 +304,7 @@ public class Main {
             double[] randomPathSimilarities = new double[100];
             counter = 0;
             do {
-                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix);
+                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
                 randomResults[counter] = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
                 randomPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(randomPath, optimalPermutation);
                 counter++;
@@ -311,7 +314,7 @@ public class Main {
             double[] heuristicPathSimilarities = new double[100];
             counter = 0;
             do {
-                int[] heuristicPath = HeuristicsAlgorithm.findPath(distanceMatrix);
+                int[] heuristicPath = HeuristicsAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
                 heuristicResults[counter] = ResultCalculator.calculateTotalDistance(heuristicPath, distanceMatrix) - optimalDistance;
                 heuristicPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(heuristicPath, optimalPermutation);
                 counter++;

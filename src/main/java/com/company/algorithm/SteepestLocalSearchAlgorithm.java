@@ -52,11 +52,10 @@ public class SteepestLocalSearchAlgorithm {
         }
     }
 
-    public static ResultEntity findPath(int[][] distanceMatrix) {
+    public static ResultEntity findPath(int[][] distanceMatrix, int[] steepestPath) {
 
         int n = distanceMatrix.length;
 
-        int[] steepestPath = new int[n];
         for (int i = 0; i < n; i++) {
             steepestPath[i] = i + 1;
         }

@@ -61,11 +61,10 @@ public class GreedyLocalSearchAlgorithm {
         return newDistance;
     }
 
-    public static ResultEntity findPath(int[][] distanceMatrix) {
+    public static ResultEntity findPath(int[][] distanceMatrix, int[] greedyPath) {
 
         int n = distanceMatrix.length;
 
-        int[] greedyPath = new int[n];
         for (int i = 0; i < n; i++) {
             greedyPath[i] = i + 1;
         }

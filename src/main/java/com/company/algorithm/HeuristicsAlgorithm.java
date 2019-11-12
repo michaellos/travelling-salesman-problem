@@ -4,14 +4,11 @@ import java.util.Random;
 
 public class HeuristicsAlgorithm {
 
-    public static int[] findPath(int[][] distanceMatrix) {
-        int[][] cloneDistanceMatrix = new int[distanceMatrix.length][];
+    public static int[] findPath(int[][] distanceMatrix, int[] greedyPath, int[][] cloneDistanceMatrix) {
+
         for (int i = 0; i< distanceMatrix.length; i++) {
             cloneDistanceMatrix[i] = distanceMatrix[i].clone();
         }
-
-        int[] greedyPath = new int[cloneDistanceMatrix.length];
-
 
         int firstPlace = new Random().nextInt(cloneDistanceMatrix.length) + 1;
         greedyPath[0] = firstPlace;

@@ -15,11 +15,10 @@ public class RandomAlgorithm {
         }
     }
 
-    public static int[] findPath(int[][] distanceMatrix) {
+    public static int[] findPath(int[][] distanceMatrix, int[] randomPath) {
 
         int n = distanceMatrix.length;
 
-        int[] randomPath = new int[n];
         for (int i = 0; i < n; i++) {
             randomPath[i] = i + 1;
         }
