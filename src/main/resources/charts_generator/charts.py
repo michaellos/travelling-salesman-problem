@@ -74,7 +74,7 @@ def task_3():
             start_result = data.loc[(data.Algorithm == algorithm) & (data.Type == "StartResult")]
             final_result = data.loc[(data.Algorithm == algorithm) & (data.Type == "FinalResult")]
             fig1, ax1 = plt.subplots(figsize=(10, 6))
-            ax1.plot(start_result.iloc[0, 2:], final_result.iloc[0, 2:], 'bo', markersize=4)
+            ax1.plot(start_result.iloc[0, 2:], final_result.iloc[0, 2:], 'bo', markersize=5)
             ax1.set_xlabel('Jakość rozwiązania początkowego')
             ax1.set_ylabel('Jakość rozwiązania końcowego')
             save_plot(plt, algorithm, output_folder, i + "/")
@@ -105,16 +105,32 @@ def task_5():
     algorithm_name = ["GreedyLocalSearchAlgorithm", "SteepestLocalSearchAlgorithm", "RandomAlgorithm", "HeuristicsAlgorithm"]
     for i in instances:
         data = pd.read_csv('../out/results_task_5_' + i + '.csv', sep=',')
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 9))
+        all_axes = [ax1, ax2, ax3, ax4]
+        ax_id = 0
+        for algorithm in algorithm_name:
+            quality = data.loc[(data.Algorithm == algorithm) & (data.Type == "Results")]
+            similarity = data.loc[(data.Algorithm == algorithm) & (data.Type == "Similarities")]
+            ax = all_axes[ax_id]
+            ax.plot(quality.iloc[0, 2:], similarity.iloc[0, 2:], 'bo', markersize=4)
+            ax.set_xlabel('Jakość rozwiązania')
+            ax.set_ylabel('Podobieństwo do optimum globalnego')
+            ax_id += 1
+        save_plot(plt, i, output_folder, i + "/")
+        plt.close(fig)
+
         for algorithm in algorithm_name:
             quality = data.loc[(data.Algorithm == algorithm) & (data.Type == "Results")]
             similarity = data.loc[(data.Algorithm == algorithm) & (data.Type == "Similarities")]
             fig1, ax1 = plt.subplots(figsize=(10, 6))
-            ax1.plot(quality.iloc[0, 2:], similarity.iloc[0, 2:], 'bo')
+            ax1.plot(quality.iloc[0, 2:], similarity.iloc[0, 2:], 'bo', markersize=5)
+            ax1.set_xlabel('Jakość rozwiązania')
+            ax1.set_ylabel('Podobieństwo do optimum globalnego')
             save_plot(plt, algorithm, output_folder, i + "/")
             plt.close(fig1)
 
 
-task_2()
-task_3()
-task_4()
+# task_2()
+# task_3()
+# task_4()
 task_5()
