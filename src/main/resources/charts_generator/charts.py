@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 path_to_charts = "../out/charts/"
 instances = ["a280", "berlin52", "ch130", "ch150", "eil101", "kroA100", "kroC100", "kroD100", "lin105", "pcb442", "pr76", "rd100", "tsp225"]
@@ -73,24 +74,30 @@ def task_3():
             start_result = data.loc[(data.Algorithm == algorithm) & (data.Type == "StartResult")]
             final_result = data.loc[(data.Algorithm == algorithm) & (data.Type == "FinalResult")]
             fig1, ax1 = plt.subplots(figsize=(10, 6))
-            ax1.plot(start_result.iloc[0, 2:], final_result.iloc[0, 2:], 'bo')
+            ax1.plot(start_result.iloc[0, 2:], final_result.iloc[0, 2:], 'bo', markersize=4)
+            ax1.set_xlabel('Jakość rozwiązania początkowego')
+            ax1.set_ylabel('Jakość rozwiązania końcowego')
             save_plot(plt, algorithm, output_folder, i + "/")
             plt.close(fig1)
 
 
 def task_4():
     output_folder = "Task 4/"
-    type_of_result = ["AverageDistance", "MinimumDistance"]
     algorithm_name = ["GreedyLocalSearchAlgorithm", "SteepestLocalSearchAlgorithm"]
     for i in instances:
         data = pd.read_csv('../out/results_task_4_' + i + '.csv', sep=',')
-        for t in type_of_result:
-            for algorithm in algorithm_name:
-                result = data.loc[(data.Algorithm == algorithm) & (data.Type == t)]
-                fig1, ax1 = plt.subplots(figsize=(10, 6))
-                ax1.plot(result.iloc[0, 2:])
-                save_plot(plt, t+algorithm, output_folder, i + "/")
-                plt.close(fig1)
+        for algorithm in algorithm_name:
+            fig1, ax1 = plt.subplots(figsize=(10, 6))
+            average_distance = data.loc[(data.Algorithm == algorithm) & (data.Type == "AverageDistance")]
+            minimum_distance = data.loc[(data.Algorithm == algorithm) & (data.Type == "MinimumDistance")]
+            ax1.plot(average_distance.iloc[0, 2:].to_list(), linestyle='-')
+            ax1.plot(minimum_distance.iloc[0, 2:].to_list(), linestyle='--')
+            ax1.set_xlabel('Liczba restartów')
+            ax1.set_ylabel('Dystans')
+            plt.xticks(np.arange(0, 301, step=30))
+            plt.legend(["Średni dystans", "Minimalny dystans"])
+            save_plot(plt, algorithm, output_folder, i + "/")
+            plt.close(fig1)
 
 
 def task_5():
