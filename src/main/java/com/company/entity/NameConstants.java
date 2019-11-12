@@ -15,14 +15,9 @@ public class NameConstants {
     public static final String BERLIN52 = "berlin52";
     public static final String CH130 = "ch130";
     public static final String CH150 = "ch150";
-    public static final String EIL101 = "eil101";
     public static final String KROA100 = "kroA100";
-    public static final String KROC100 = "kroC100";
-    public static final String KROD100 = "kroD100";
-    public static final String LIN105 = "lin105";
     public static final String PCB442 = "pcb442";
     public static final String PR76 = "pr76";
-    public static final String RD100 = "rd100";
     public static final String TSP225 = "tsp225";
 
     public static final List<String> INSTANCES = new ArrayList<String>() {{

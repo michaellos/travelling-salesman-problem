@@ -1,7 +1,7 @@
 package com.company;
 
-import com.company.algorithm.HeuristicsAlgorithm;
 import com.company.algorithm.GreedyLocalSearchAlgorithm;
+import com.company.algorithm.HeuristicsAlgorithm;
 import com.company.algorithm.RandomAlgorithm;
 import com.company.algorithm.SteepestLocalSearchAlgorithm;
 import com.company.control.*;
@@ -16,35 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + BERLIN52 + INSTANCE_EXTENSION).getAbsolutePath());
-//        for (int[] row : distanceMatrix) {
-//            for (int distance : row) {
-//                System.out.print(distance + " ");
-//            }
-//            System.out.println();
-//        }
-//
-//        int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + BERLIN52 + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
-//
-//        int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
-//        System.out.println(optimalDistance);
-//
-//        double similarity = ResultCalculator.calculateSolutionSimilarity(optimalPermutation, optimalPermutation);
-//        System.out.println(similarity);
-//
-//        for (String filename : FILENAMES) {
-//            System.out.println(filename);
-//        }
-//
-//        int[] greedyPath = GreedyHeuristicsAlgorithm.findPath(distanceMatrix);
-//        for (int place : greedyPath) {
-//            System.out.print(place + " ");
-//        }
-
         for (String instance : INSTANCES) {
-
-//            String instance = BERLIN52;
-
             int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
 
             int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + instance + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
@@ -160,13 +132,15 @@ public class Main {
 
             float steepestAverageTime = (float) (endTime - startTime) / counter;
 
+            float randomBorderTime = Math.max(greedyAverageTime, steepestAverageTime);
+
             counter = 0;
             startTime = System.currentTimeMillis();
             do {
                 RandomAlgorithm.findPath(distanceMatrix, startingPath);
                 endTime = System.currentTimeMillis();
                 counter++;
-            } while (endTime - startTime < 1000 || counter < 10);
+            } while (endTime - startTime < randomBorderTime || counter < 10);
 
             float randomAverageTime = (float) (endTime - startTime) / counter;
 

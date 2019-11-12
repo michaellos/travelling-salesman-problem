@@ -1,5 +1,5 @@
 Algorithm,AverageResult,BestResult,AverageTime,StandardDeviation,Efficiency,AverageStepNumber,AverageVisitSolutionNumber
-GreedyLocalSearchAlgorithm,1313.5,893,2.1319149,319.2933604070088,616.1128,393.8,581712.1
-SteepestLocalSearchAlgorithm,1287.2,418,1.996008,509.2154357440474,644.88715,103.9,519255.0
-RandomAlgorithm,152674.2,139691,0.004731152,7403.651285683301,3.2269984E7,0.0,0.0
-HeuristicsAlgorithm,5934.3,4365,0.024885526,868.8936701346145,238463.9,0.0,0.0
+GreedyLocalSearchAlgorithm  ,1385.5       ,127       ,5.6497173  ,1005.1366325032632,245.2335   ,391.4            ,592348.2
+SteepestLocalSearchAlgorithm,1482.5       ,963       ,5.1968913  ,511.45816055665784,285.2667   ,105.0            ,524700.0
+RandomAlgorithm             ,149070.1     ,134090    ,0.012024048,8688.322858296646 ,1.2397663E7,0.0              ,0.0
+HeuristicsAlgorithm         ,5664.5       ,5006      ,0.06097561 ,689.7217192462479 ,92897.8    ,0.0              ,0.0
