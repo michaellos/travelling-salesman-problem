@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 path_to_charts = "../out/charts/"
-instances = ["a280", "berlin52", "ch130", "ch150", "kroA100", "pcb442", "pr76", "tsp225"]
-
+instances = ["berlin52", "pr76", "kroA100", "ch130", "ch150", "tsp225", "a280", "pcb442"]
 
 def save_plot(plot, name, task, instance):
 
@@ -18,78 +17,149 @@ def save_plot(plot, name, task, instance):
     plot.savefig(path_to_charts + task + instance + name)
 
 
+def save_plot2(plot, name, task):
+
+    if not os.path.exists(path_to_charts):
+        os.mkdir(path_to_charts)
+    if not os.path.exists(path_to_charts + task):
+        os.mkdir(path_to_charts + task)
+    plot.savefig(path_to_charts + task + name)
+
+
 def task_2():
     output_folder = "Task 2/"
+
+    average_results_greedy = []
+    average_results_steepest = []
+    average_results_random = []
+    average_results_heuristics = []
+
+    standard_deviation_greedy = []
+    standard_deviation_steepest = []
+    standard_deviation_random = []
+    standard_deviation_heuristics = []
+
+    best_results_greedy = []
+    best_results_steepest = []
+    best_results_random = []
+    best_results_heuristics = []
+
+    average_time_greedy = []
+    average_time_steepest = []
+    average_time_random = []
+    average_time_heuristics = []
+
+    efficiency_greedy = []
+    efficiency_steepest = []
+    efficiency_random = []
+    efficiency_heuristics = []
+
+    average_steps_greedy = []
+    average_steps_steepest = []
+    average_visit_solutions_greedy = []
+    average_visit_solutions_steepest = []
+
+    algorithm_names = []
+    n_in_instances = [52, 76, 100, 130, 150, 225, 280, 442]
 
     for i in instances:
         data = pd.read_csv('../out/results_task_2_' + i + '.csv', sep=',')
         algorithm_names = data["Algorithm"].to_list()
 
-        average_results = data["AverageResult"].to_list()
-        standard_deviation = data["StandardDeviation"].to_list()
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
-        plt.yscale("log")
-        ax1.set_ylabel("Odległość od optimum - skala logarytmiczna")
-        ax1.errorbar(algorithm_names, average_results, standard_deviation, color='b', linestyle='None', fmt='o')
-        save_plot(plt, "AverageResult", output_folder, i + "/")
-        plt.close(fig1)
+        average_results_greedy.append(data["AverageResult"][0])
+        average_results_steepest.append(data["AverageResult"][1])
+        average_results_random.append(data["AverageResult"][2])
+        average_results_heuristics.append(data["AverageResult"][3])
 
-        average_results_without_random = data["AverageResult"].to_list()
-        average_results_without_random.pop(2)
-        standard_deviation_without_random = data["StandardDeviation"].to_list()
-        standard_deviation_without_random.pop(2)
-        algorithm_names_without_random = data["Algorithm"].to_list()
-        algorithm_names_without_random.pop(2)
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
-        ax1.set_ylabel("Odległość od optimum")
-        ax1.errorbar(algorithm_names_without_random, average_results_without_random, standard_deviation_without_random, color='b', linestyle='None', fmt='o')
-        save_plot(plt, "AverageResultWithoutRandom", output_folder, i + "/")
-        plt.close(fig1)
+        standard_deviation_greedy.append(data["StandardDeviation"][0])
+        standard_deviation_steepest.append(data["StandardDeviation"][1])
+        standard_deviation_random.append(data["StandardDeviation"][2])
+        standard_deviation_heuristics.append(data["StandardDeviation"][3])
 
-        best_results = data["BestResult"].to_list()
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
-        plt.yscale("log")
-        ax1.plot(algorithm_names, best_results, 'bo', markersize=5)
-        ax1.set_ylabel("Odległość od optimum - skala logarytmiczna")
-        save_plot(plt, "BestResult", output_folder, i + "/")
-        plt.close(fig1)
+        best_results_greedy.append(data["BestResult"][0])
+        best_results_steepest.append(data["BestResult"][1])
+        best_results_random.append(data["BestResult"][2])
+        best_results_heuristics.append(data["BestResult"][3])
 
-        best_results_without_random = data["BestResult"].to_list()
-        best_results_without_random.pop(2)
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
-        ax1.plot(algorithm_names_without_random, best_results_without_random, 'bo', markersize=5)
-        ax1.set_ylabel("Odległość od optimum")
-        save_plot(plt, "BestResultWithoutRandom", output_folder, i + "/")
-        plt.close(fig1)
+        average_time_greedy.append(data["AverageTime"][0])
+        average_time_steepest.append(data["AverageTime"][1])
+        average_time_random.append(data["AverageTime"][2])
+        average_time_heuristics.append(data["AverageTime"][3])
 
-        average_times = data["AverageTime"].to_list()
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
-        ax1.plot(algorithm_names, average_times, 'bo', markersize=5)
-        ax1.set_ylabel("Średni czas działania algorytmu [s]")
-        save_plot(plt, "AverageTime", output_folder, i + "/")
-        plt.close(fig1)
+        efficiency_greedy.append(data["Efficiency"][0])
+        efficiency_steepest.append(data["Efficiency"][1])
+        efficiency_random.append(data["Efficiency"][2])
+        efficiency_heuristics.append(data["Efficiency"][3])
 
-        efficiency = data["Efficiency"].to_list()
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
-        ax1.plot(algorithm_names, efficiency, 'bo', markersize=5)
-        ax1.set_ylabel("Efektywność algorytmu")
-        save_plot(plt, "Efficiency", output_folder, i + "/")
-        plt.close(fig1)
+        average_steps_greedy.append(data["AverageStepNumber"][0])
+        average_steps_steepest.append(data["AverageStepNumber"][1])
 
-        average_step_number = data["AverageStepNumber"].iloc[0:2].to_list()
-        fig1, ax1 = plt.subplots(figsize=(10, 6))
-        l1 = ax1.plot(algorithm_names[0:2], average_step_number, 'bo', markersize=4, marker='o')
-        ax1.set_ylabel("Liczba kroków algorytmu")
+        average_visit_solutions_greedy.append(data["AverageVisitSolutionNumber"][0])
+        average_visit_solutions_steepest.append(data["AverageVisitSolutionNumber"][1])
 
-        average_visit_solution_number = data["AverageVisitSolutionNumber"].iloc[0:2].to_list()
-        ax2 = ax1.twinx()
-        l2 = ax2.plot(algorithm_names[0:2], average_visit_solution_number, 'bo', markersize=7, marker='x')
-        ax2.set_ylabel("Liczba ocenionych rozwiązań")
-        leg = l1 + l2
-        ax1.legend(leg, ["Średnia liczba kroków algorytmu", "Średnia liczba ocenionych rozwiązań"], loc=10)
-        ax1.set_ylim([min(average_step_number) - 100, max(average_step_number) + 100])
-        save_plot(plt, "Liczba krokow i ocenionych rozwiazan", output_folder, i + "/")
-        plt.close(fig1)
+    plt.style.use('grayscale')
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    plt.yscale("log")
+    ax1.set_ylabel("Odległość od optimum - skala logarytmiczna")
+    ax1.set_xlabel("Rozmiar instancji")
+    ax1.errorbar(n_in_instances, average_results_greedy, standard_deviation_greedy, linestyle='solid', fmt='o')
+    ax1.errorbar(n_in_instances, average_results_steepest, standard_deviation_steepest, linestyle='dashdot', fmt='D')
+    ax1.errorbar(n_in_instances, average_results_random, standard_deviation_random, linestyle='dashed', fmt='^')
+    ax1.errorbar(n_in_instances, average_results_heuristics, standard_deviation_heuristics, linestyle='dotted', fmt='x')
+    plt.legend(algorithm_names)
+    save_plot(plt, "AverageResult", output_folder, "/")
+    plt.close(fig1)
+
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    plt.yscale("log")
+    ax1.plot(n_in_instances, best_results_greedy, linestyle='solid', markersize=4, marker='o')
+    ax1.plot(n_in_instances, best_results_steepest, linestyle='dashdot', markersize=4, marker='D')
+    ax1.plot(n_in_instances, best_results_random, linestyle='dashed', markersize=4, marker='^')
+    ax1.plot(n_in_instances, best_results_heuristics, linestyle='dotted', markersize=4, marker='x')
+    ax1.set_ylabel("Odległość od optimum - skala logarytmiczna")
+    ax1.set_xlabel("Rozmiar instancji")
+    plt.legend(algorithm_names)
+    save_plot2(plt, "BestResult", output_folder)
+    plt.close(fig1)
+
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    ax1.plot(n_in_instances, average_time_greedy, linestyle='solid', markersize=4, marker='o')
+    ax1.plot(n_in_instances, average_time_steepest, linestyle='dashdot', markersize=4, marker='D')
+    ax1.plot(n_in_instances, average_time_random, linestyle='dashed', markersize=4, marker='^')
+    ax1.plot(n_in_instances, average_time_heuristics, linestyle='dotted', markersize=4, marker='x')
+    ax1.set_ylabel("Średni czas działania algorytmu [ms]")
+    ax1.set_xlabel("Rozmiar instancji")
+    plt.legend(algorithm_names)
+    save_plot2(plt, "AverageTime", output_folder)
+    plt.close(fig1)
+
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    plt.yscale("log")
+    ax1.plot(n_in_instances, efficiency_greedy, linestyle='solid', markersize=4, marker='o')
+    ax1.plot(n_in_instances, efficiency_steepest, linestyle='dashdot', markersize=4, marker='D')
+    ax1.plot(n_in_instances, efficiency_random, linestyle='dashed', markersize=4, marker='^')
+    ax1.plot(n_in_instances, average_time_heuristics, linestyle='dotted', markersize=4, marker='x')
+    ax1.set_ylabel("Efektywność algorytmu - skala logarytmiczna")
+    ax1.set_xlabel("Rozmiar instancji")
+    plt.legend(algorithm_names)
+    save_plot2(plt, "Efficiency", output_folder)
+    plt.close(fig1)
+
+    fig, (ax1, ax2) = plt.subplots(2, figsize=(10,9))
+    ax1.plot(n_in_instances, average_steps_greedy, linestyle='solid', markersize=4, marker='o')
+    ax1.plot(n_in_instances, average_steps_steepest, linestyle='dashdot', markersize=4, marker='D')
+    ax1.set_ylabel("Liczba kroków algorytmu")
+    ax1.set_xlabel("Rozmiar instancji")
+    ax1.legend(algorithm_names[0:2])
+
+    ax2.plot(n_in_instances, average_visit_solutions_greedy, linestyle='solid', markersize=4, marker='o')
+    ax2.plot(n_in_instances, average_visit_solutions_steepest, linestyle='dashdot', markersize=4, marker='D')
+    ax2.set_ylabel("Liczba ocenionych rozwiązań")
+    ax2.set_xlabel("Rozmiar instancji")
+
+    ax2.legend(algorithm_names[0:2])
+    save_plot2(plt, "Liczba kroków i ocenionych rozwiazań", output_folder)
+    plt.close(fig1)
 
 
 def task_3():
@@ -104,7 +174,7 @@ def task_3():
             ax1.plot(start_result.iloc[0, 2:], final_result.iloc[0, 2:], 'bo', markersize=5)
             ax1.set_xlabel('Jakość rozwiązania początkowego')
             ax1.set_ylabel('Jakość rozwiązania końcowego')
-            save_plot(plt, algorithm, output_folder, i + "/")
+            save_plot(plt, "T3" + algorithm + i, output_folder, i + "/")
             plt.close(fig1)
 
 
@@ -123,7 +193,7 @@ def task_4():
             ax1.set_ylabel('Dystans')
             plt.xticks(np.arange(0, 301, step=30))
             plt.legend(["Średni dystans", "Minimalny dystans"])
-            save_plot(plt, algorithm, output_folder, i + "/")
+            save_plot(plt, "T4" + algorithm + i, output_folder, i + "/")
             plt.close(fig1)
 
 
@@ -143,7 +213,7 @@ def task_5():
             ax.set_xlabel('Jakość rozwiązania')
             ax.set_ylabel('Podobieństwo do optimum globalnego')
             ax_id += 1
-        save_plot(plt, i, output_folder, i + "/")
+        save_plot(plt, "T5" + i, output_folder, i + "/")
         plt.close(fig)
 
         for algorithm in algorithm_name:
@@ -153,11 +223,11 @@ def task_5():
             ax1.plot(quality.iloc[0, 2:], similarity.iloc[0, 2:], 'bo', markersize=5)
             ax1.set_xlabel('Jakość rozwiązania')
             ax1.set_ylabel('Podobieństwo do optimum globalnego')
-            save_plot(plt, algorithm, output_folder, i + "/")
+            save_plot(plt, "T5" + algorithm + i, output_folder, i + "/")
             plt.close(fig1)
 
 
 task_2()
-# task_3()
-# task_4()
-# task_5()
+task_3()
+task_4()
+task_5()
