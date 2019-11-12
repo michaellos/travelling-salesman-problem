@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 path_to_charts = "../out/charts/"
-instances = ["a280", "berlin52", "ch130", "ch150", "eil101", "kroA100", "kroC100", "kroD100", "lin105", "pcb442", "pr76", "rd100", "tsp225"]
+instances = ["a280", "berlin52", "ch130", "ch150", "kroA100", "pcb442", "pr76", "tsp225"]
 
 
 def save_plot(plot, name, task, instance):

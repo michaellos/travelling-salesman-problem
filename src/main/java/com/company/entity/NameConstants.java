@@ -30,14 +30,9 @@ public class NameConstants {
         add(BERLIN52);
         add(CH130);
         add(CH150);
-        add(EIL101);
         add(KROA100);
-        add(KROC100);
-        add(KROD100);
-        add(LIN105);
         add(PCB442);
         add(PR76);
-        add(RD100);
         add(TSP225);
     }};
 }
