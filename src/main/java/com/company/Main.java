@@ -1,9 +1,6 @@
 package com.company;
 
-import com.company.algorithm.GreedyLocalSearchAlgorithm;
-import com.company.algorithm.HeuristicsAlgorithm;
-import com.company.algorithm.RandomAlgorithm;
-import com.company.algorithm.SteepestLocalSearchAlgorithm;
+import com.company.algorithm.*;
 import com.company.control.*;
 import com.company.entity.ResultEntity;
 
@@ -12,10 +9,44 @@ import java.io.IOException;
 
 import static com.company.entity.NameConstants.*;
 
+
+
 public class Main {
 
     public static void main(String[] args) {
+//        generateFirstReport();
+        testSimulatedAnnealing();
+    }
 
+    private static void testSimulatedAnnealing() {
+        String instance = INSTANCES.get(1);
+
+        int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
+
+        int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + instance + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
+        int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
+
+        int[] startingPath = new int[distanceMatrix.length];
+
+        ResultEntity resultEntity = SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath, 1000);
+        int[] SAPath = resultEntity.getFinalPath();
+        int SAresult = ResultCalculator.calculateTotalDistance(SAPath, distanceMatrix) - optimalDistance;
+
+        resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
+        int[] greedyPath = resultEntity.getFinalPath();
+        int greedyRresult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
+
+
+        int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
+        int randomRresult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
+
+        System.out.println("SA: " + SAresult);
+        System.out.println("Greedy: " + greedyRresult);
+        System.out.println("Random: " + randomRresult);
+
+    }
+
+    private static void generateFirstReport() {
         for (String instance : INSTANCES) {
             int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
 
