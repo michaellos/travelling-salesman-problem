@@ -40,6 +40,34 @@ public class Main {
         int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
         int randomRresult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
 
+        System.out.println("Instance: " + instance);
+        System.out.println("SA: " + SAresult);
+        System.out.println("Greedy: " + greedyRresult);
+        System.out.println("Random: " + randomRresult);
+
+
+        instance = INSTANCES.get(0);
+
+        distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
+
+        optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + instance + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
+        optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
+
+        startingPath = new int[distanceMatrix.length];
+
+        resultEntity = SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath, 1000);
+        SAPath = resultEntity.getFinalPath();
+        SAresult = ResultCalculator.calculateTotalDistance(SAPath, distanceMatrix) - optimalDistance;
+
+        resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
+        greedyPath = resultEntity.getFinalPath();
+        greedyRresult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
+
+
+        randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
+        randomRresult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
+
+        System.out.println("Instance: " + instance);
         System.out.println("SA: " + SAresult);
         System.out.println("Greedy: " + greedyRresult);
         System.out.println("Random: " + randomRresult);
