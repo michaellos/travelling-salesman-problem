@@ -61,7 +61,7 @@ public class SimulatedAnnealingAlgorithm {
     public static ResultEntity findPath(int[][] distanceMatrix, int[] path, float temperature) {
 
 //        Parameter defining how many neighbour to look at at given temperature
-        final int s = 1;
+        final int s = 10;
 
         int n = distanceMatrix.length;
 
@@ -78,54 +78,54 @@ public class SimulatedAnnealingAlgorithm {
         int[] bestPath = path.clone();
         int distance = ResultCalculator.calculateTotalDistance(path, distanceMatrix);
         int bestDistance = distance;
-        boolean change;
+        boolean globalChange = false;
         int newDistance;
+        int numberNoChange = 0;
 
         do {
-
+            globalChange = false;
             int counter = 0;
 
             do {
-                change = false;
                 for (int i = 0; i < n - 1; i++) {
                     for (int j = i + 1; j < n; j++) {
                         counter++;
                         newDistance = calculateNewDistance(distance, i, j, distanceMatrix, path);
 
 //                        ToDo: remove duplicated code
-                        if (newDistance <= distance) {
+                        if (newDistance < distance) {
                             distance = newDistance;
                             reverseSwap(path, i, j);
                             if (bestDistance > distance) {
                                 bestDistance = distance;
                                 bestPath = path.clone();
                             }
-                            change = true;
-                            break;
+                            globalChange = true;
                         } else {
                             if (Math.exp((distance - newDistance) / temperature) > Math.random()) {
                                 distance = newDistance;
                                 reverseSwap(path, i, j);
-                                change = true;
-                                break;
                             }
                         }
                     }
-                    if (change)
-                        break;
                 }
-            } while (counter < s * n * 2);
+            } while (counter < s * n * n);
 
             temperature = calculateTemperature(temperature);
+            if(!globalChange) {
+                numberNoChange++;
+            }
+            else {
+                numberNoChange = 0;
+            }
 //            ToDo: add better stop condition
-        } while (temperature > 10);
-
+        } while (numberNoChange < 10 && temperature > 0);
 //        Should it return ResultEntity?
         return new ResultEntity(firstPath, bestPath, stepCounter, solutionCounter);
     }
 
     //    ToDo: add better cooling function
     private static float calculateTemperature(float temperature) {
-        return temperature - 1;
+        return (float) (temperature * 0.9);
     }
 }
