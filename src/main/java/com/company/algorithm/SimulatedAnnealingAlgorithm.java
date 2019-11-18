@@ -29,9 +29,13 @@ public class SimulatedAnnealingAlgorithm {
     }
 
     public static ResultEntity findPath(int[][] distanceMatrix, int[] path) {
+
+//        Parameters
         double startingTemperature = getStartingTemperature(distanceMatrix, path);
-//        System.out.println("Starting temperature:" + startingTemperature);
-        return findPath(distanceMatrix, path, startingTemperature);
+        double coolingParameter = 0.9;
+        int stepParameter = 20;
+
+        return findPath(distanceMatrix, path, startingTemperature, coolingParameter, stepParameter);
     }
 
     private static double getStartingTemperature(int[][] distanceMatrix, int[] path) {
@@ -87,10 +91,7 @@ public class SimulatedAnnealingAlgorithm {
     }
 
     //    ToDo: improve performance
-    private static ResultEntity findPath(int[][] distanceMatrix, int[] path, double temperature) {
-
-//        Parameter defining how many neighbour to look at at given temperature
-        final int s = 10;
+    private static ResultEntity findPath(int[][] distanceMatrix, int[] path, double temperature, double coolingParameter, int stepParameter) {
 
         int n = distanceMatrix.length;
 
@@ -107,12 +108,12 @@ public class SimulatedAnnealingAlgorithm {
         int[] bestPath = path.clone();
         int distance = ResultCalculator.calculateTotalDistance(path, distanceMatrix);
         int bestDistance = distance;
-        boolean globalChange = false;
+        boolean change;
         int newDistance;
         int numberNoChange = 0;
 
         do {
-            globalChange = false;
+            change = false;
             int counter = 0;
 
             do {
@@ -129,7 +130,7 @@ public class SimulatedAnnealingAlgorithm {
                                 bestDistance = distance;
                                 bestPath = path.clone();
                             }
-                            globalChange = true;
+                            change = true;
                         } else {
                             if (Math.exp((distance - newDistance) / temperature) > Math.random()) {
                                 distance = newDistance;
@@ -138,23 +139,22 @@ public class SimulatedAnnealingAlgorithm {
                         }
                     }
                 }
-            } while (counter < s * n * n);
+            } while (counter < stepParameter * n * n);
 
-            temperature = calculateTemperature(temperature);
-            if(!globalChange) {
+            temperature = coolingTemperature(temperature, coolingParameter);
+            if(!change) {
                 numberNoChange++;
             }
             else {
                 numberNoChange = 0;
             }
-//            ToDo: add better stop condition
-        } while (numberNoChange < 10 && temperature > 0);
+        } while (numberNoChange < 10);
+
 //        Should it return ResultEntity?
         return new ResultEntity(firstPath, bestPath, stepCounter, solutionCounter);
     }
 
-    //    ToDo: add better cooling function
-    private static float calculateTemperature(double temperature) {
-        return (float) (temperature * 0.9);
+    private static double coolingTemperature(double temperature, double coolingParameter) {
+        return temperature * coolingParameter;
     }
 }
