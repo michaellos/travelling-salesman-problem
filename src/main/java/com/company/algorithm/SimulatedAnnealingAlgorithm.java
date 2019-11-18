@@ -28,21 +28,11 @@ public class SimulatedAnnealingAlgorithm {
         }
     }
 
-    public static ResultEntity findPath(int[][] distanceMatrix, int[] path) {
-
-//        Parameters
-        double startingTemperature = getStartingTemperature(distanceMatrix, path);
-        double coolingParameter = 0.9;
-        int stepParameter = 20;
-
-        return findPath(distanceMatrix, path, startingTemperature, coolingParameter, stepParameter);
-    }
-
     private static double getStartingTemperature(int[][] distanceMatrix, int[] path) {
         int maxDifference = getMaxNeighborDifference(distanceMatrix, path);
         double logValue = Math.log(0.99);
 
-        return - (maxDifference / logValue);
+        return -(maxDifference / logValue);
     }
 
     private static int getMaxNeighborDifference(int[][] distanceMatrix, int[] path) {
@@ -62,7 +52,7 @@ public class SimulatedAnnealingAlgorithm {
         Random random = new Random();
         int i = random.nextInt(path.length);
         int j = random.nextInt(path.length);
-        int distanceFromNeighbor = calculateNewDistance(distance, i, j, distanceMatrix, path) ;
+        int distanceFromNeighbor = calculateNewDistance(distance, i, j, distanceMatrix, path);
         return Math.abs(distance - distanceFromNeighbor);
     }
 
@@ -90,7 +80,10 @@ public class SimulatedAnnealingAlgorithm {
         return newDistance;
     }
 
-    //    ToDo: improve performance
+    private static double coolingTemperature(double temperature, double coolingParameter) {
+        return temperature * coolingParameter;
+    }
+
     private static ResultEntity findPath(int[][] distanceMatrix, int[] path, double temperature, double coolingParameter, int stepParameter) {
 
         int n = distanceMatrix.length;
@@ -101,7 +94,6 @@ public class SimulatedAnnealingAlgorithm {
 
         shuffleXOR(path, n);
 
-//        Czy to jest potrzebne?
         int[] firstPath = path.clone();
         int stepCounter = 0;
         int solutionCounter = 0;
@@ -121,10 +113,11 @@ public class SimulatedAnnealingAlgorithm {
                     for (int j = i + 1; j < n; j++) {
                         counter++;
                         newDistance = calculateNewDistance(distance, i, j, distanceMatrix, path);
+                        solutionCounter++;
 
-//                        ToDo: remove duplicated code
                         if (newDistance < distance) {
                             distance = newDistance;
+                            stepCounter++;
                             reverseSwap(path, i, j);
                             if (bestDistance > distance) {
                                 bestDistance = distance;
@@ -134,6 +127,7 @@ public class SimulatedAnnealingAlgorithm {
                         } else {
                             if (Math.exp((distance - newDistance) / temperature) > Math.random()) {
                                 distance = newDistance;
+                                stepCounter++;
                                 reverseSwap(path, i, j);
                             }
                         }
@@ -142,19 +136,23 @@ public class SimulatedAnnealingAlgorithm {
             } while (counter < stepParameter * n * n);
 
             temperature = coolingTemperature(temperature, coolingParameter);
-            if(!change) {
+            if (!change) {
                 numberNoChange++;
-            }
-            else {
+            } else {
                 numberNoChange = 0;
             }
         } while (numberNoChange < 10);
 
-//        Should it return ResultEntity?
         return new ResultEntity(firstPath, bestPath, stepCounter, solutionCounter);
     }
 
-    private static double coolingTemperature(double temperature, double coolingParameter) {
-        return temperature * coolingParameter;
+    public static ResultEntity findPath(int[][] distanceMatrix, int[] path) {
+
+//        Parameters
+        double startingTemperature = getStartingTemperature(distanceMatrix, path);
+        double coolingParameter = 0.9;
+        int stepParameter = 20;
+
+        return findPath(distanceMatrix, path, startingTemperature, coolingParameter, stepParameter);
     }
 }

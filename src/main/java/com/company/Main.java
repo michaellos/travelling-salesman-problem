@@ -10,12 +10,9 @@ import java.io.IOException;
 import static com.company.entity.NameConstants.*;
 
 
-
 public class Main {
 
     public static void main(String[] args) {
-//        generateFirstReport();
-        testSimulatedAnnealing();
     }
 
     private static void testSimulatedAnnealing() {
@@ -71,7 +68,6 @@ public class Main {
         System.out.println("SA: " + SAresult);
         System.out.println("Greedy: " + greedyRresult);
         System.out.println("Random: " + randomRresult);
-
     }
 
     private static void generateFirstReport() {
