@@ -28,7 +28,7 @@ public class Main {
 
         int[] startingPath = new int[distanceMatrix.length];
 
-        ResultEntity resultEntity = SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath, 1000);
+        ResultEntity resultEntity = SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath);
         int[] SAPath = resultEntity.getFinalPath();
         int SAresult = ResultCalculator.calculateTotalDistance(SAPath, distanceMatrix) - optimalDistance;
 
@@ -55,7 +55,7 @@ public class Main {
 
         startingPath = new int[distanceMatrix.length];
 
-        resultEntity = SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath, 1000);
+        resultEntity = SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath);
         SAPath = resultEntity.getFinalPath();
         SAresult = ResultCalculator.calculateTotalDistance(SAPath, distanceMatrix) - optimalDistance;
 

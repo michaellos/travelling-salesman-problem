@@ -28,9 +28,38 @@ public class SimulatedAnnealingAlgorithm {
         }
     }
 
-
     public static ResultEntity findPath(int[][] distanceMatrix, int[] path) {
-        return findPath(distanceMatrix, path, 100);
+        double startingTemperature = getStartingTemperature(distanceMatrix, path);
+//        System.out.println("Starting temperature:" + startingTemperature);
+        return findPath(distanceMatrix, path, startingTemperature);
+    }
+
+    private static double getStartingTemperature(int[][] distanceMatrix, int[] path) {
+        int maxDifference = getMaxNeighborDifference(distanceMatrix, path);
+        double logValue = Math.log(0.99);
+
+        return - (maxDifference / logValue);
+    }
+
+    private static int getMaxNeighborDifference(int[][] distanceMatrix, int[] path) {
+        int maxDifference = 0;
+
+        for (int i = 0; i < 10000; i++) {
+            int difference = getSampleDifference(distanceMatrix, path);
+            maxDifference = Math.max(maxDifference, difference);
+        }
+
+        return maxDifference;
+    }
+
+    private static int getSampleDifference(int[][] distanceMatrix, int[] path) {
+        path = RandomAlgorithm.findPath(distanceMatrix, path);
+        int distance = ResultCalculator.calculateTotalDistance(path, distanceMatrix);
+        Random random = new Random();
+        int i = random.nextInt(path.length);
+        int j = random.nextInt(path.length);
+        int distanceFromNeighbor = calculateNewDistance(distance, i, j, distanceMatrix, path) ;
+        return Math.abs(distance - distanceFromNeighbor);
     }
 
     private static int calculateNewDistance(int oldDistance, int i, int j, int[][] distanceMatrix, int[] path) {
@@ -58,7 +87,7 @@ public class SimulatedAnnealingAlgorithm {
     }
 
     //    ToDo: improve performance
-    public static ResultEntity findPath(int[][] distanceMatrix, int[] path, float temperature) {
+    private static ResultEntity findPath(int[][] distanceMatrix, int[] path, double temperature) {
 
 //        Parameter defining how many neighbour to look at at given temperature
         final int s = 10;
@@ -125,7 +154,7 @@ public class SimulatedAnnealingAlgorithm {
     }
 
     //    ToDo: add better cooling function
-    private static float calculateTemperature(float temperature) {
+    private static float calculateTemperature(double temperature) {
         return (float) (temperature * 0.9);
     }
 }
