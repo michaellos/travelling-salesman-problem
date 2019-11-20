@@ -164,6 +164,54 @@ public class Main {
             float heuristicAverageResult = (float) heuristicSumResult / counter;
             double heuristicStandardDeviation = StandardDeviation.calculate(heuristicResults);
 
+            int simulatedAnnealingSumResult = 0;
+            int simulatedAnnealingMinimumResult = Integer.MAX_VALUE;
+            int simulatedAnnealingSumStepNumber = 0;
+            int simulatedAnnealingSumVisitSolutionNumber = 0;
+            int[] simulatedAnnealingResults = new int[10];
+            counter = 0;
+            do {
+                ResultEntity resultEntity = SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath);
+                int[] simulatedAnnealingPath = resultEntity.getFinalPath();
+                int simulatedAnnealingResult = ResultCalculator.calculateTotalDistance(simulatedAnnealingPath, distanceMatrix) - optimalDistance;
+                simulatedAnnealingResults[counter] = simulatedAnnealingResult;
+                simulatedAnnealingSumResult += simulatedAnnealingResult;
+                simulatedAnnealingSumStepNumber += resultEntity.getStepNumber();
+                simulatedAnnealingSumVisitSolutionNumber += resultEntity.getVisitSolutionNumber();
+                if (simulatedAnnealingResult < simulatedAnnealingMinimumResult) {
+                    simulatedAnnealingMinimumResult = simulatedAnnealingResult;
+                }
+                counter++;
+            } while (counter < 10);
+            float simulatedAnnealingAverageResult = (float) simulatedAnnealingSumResult / counter;
+            double simulatedAnnealingStandardDeviation = StandardDeviation.calculate(simulatedAnnealingResults);
+            float simulatedAnnealingAverageStepNumber = (float) simulatedAnnealingSumStepNumber / counter;
+            float simulatedAnnealingAverageVisitSolutionNumber = (float) simulatedAnnealingSumVisitSolutionNumber / counter;
+
+            int tabuSearchSumResult = 0;
+            int tabuSearchMinimumResult = Integer.MAX_VALUE;
+            int tabuSearchSumStepNumber = 0;
+            int tabuSearchSumVisitSolutionNumber = 0;
+            int[] tabuSearchResults = new int[10];
+            counter = 0;
+            do {
+                ResultEntity resultEntity = TabuSearchAlgorithm.findPath(distanceMatrix, startingPath);
+                int[] tabuSearchPath = resultEntity.getFinalPath();
+                int tabuSearchResult = ResultCalculator.calculateTotalDistance(tabuSearchPath, distanceMatrix) - optimalDistance;
+                tabuSearchResults[counter] = tabuSearchResult;
+                tabuSearchSumResult += tabuSearchResult;
+                tabuSearchSumStepNumber += resultEntity.getStepNumber();
+                tabuSearchSumVisitSolutionNumber += resultEntity.getVisitSolutionNumber();
+                if (tabuSearchResult < tabuSearchMinimumResult) {
+                    tabuSearchMinimumResult = tabuSearchResult;
+                }
+                counter++;
+            } while (counter < 10);
+            float tabuSearchAverageResult = (float) tabuSearchSumResult / counter;
+            double tabuSearchStandardDeviation = StandardDeviation.calculate(tabuSearchResults);
+            float tabuSearchAverageStepNumber = (float) tabuSearchSumStepNumber / counter;
+            float tabuSearchAverageVisitSolutionNumber = (float) tabuSearchSumVisitSolutionNumber / counter;
+
             // pomiar czasu
 
             counter = 0;
@@ -209,12 +257,34 @@ public class Main {
 
             float heuristicAverageTime = (float) (endTime - startTime) / counter;
 
+            counter = 0;
+            startTime = System.currentTimeMillis();
+            do {
+                SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float simulatedAnnealingAverageTime = (float) (endTime - startTime) / counter;
+
+            counter = 0;
+            startTime = System.currentTimeMillis();
+            do {
+                TabuSearchAlgorithm.findPath(distanceMatrix, startingPath);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float tabuSearchAverageTime = (float) (endTime - startTime) / counter;
+
             // jakość w czasie (średni błąd bezwzględny / średni czas działania)
 
             float greedyEfficiency = greedyAverageResult / greedyAverageTime;
             float steepestEfficiency = steepestAverageResult / steepestAverageTime;
             float randomEfficiency = randomAverageResult / randomAverageTime;
             float heuristicEfficiency = heuristicAverageResult / heuristicAverageTime;
+            float simulatedAnnealingEfficiency = simulatedAnnealingAverageResult / simulatedAnnealingAverageTime;
+            float tabuSearchEfficiency = tabuSearchAverageResult / tabuSearchAverageTime;
 
             try {
                 ResultTask2ToCsvWriter resultTask2ToCsvWriter = new ResultTask2ToCsvWriter(instance);
@@ -222,6 +292,8 @@ public class Main {
                 resultTask2ToCsvWriter.addRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestAverageResult, steepestMinimumResult, steepestAverageTime, steepestStandardDeviation, steepestEfficiency, steepestAverageStepNumber, steepestAverageVisitSolutionNumber);
                 resultTask2ToCsvWriter.addRow(RandomAlgorithm.class.getSimpleName(), randomAverageResult, randomMinimumResult, randomAverageTime, randomStandardDeviation, randomEfficiency, 0, 0);
                 resultTask2ToCsvWriter.addRow(HeuristicsAlgorithm.class.getSimpleName(), heuristicAverageResult, heuristicMinimumResult, heuristicAverageTime, heuristicStandardDeviation, heuristicEfficiency, 0, 0);
+                resultTask2ToCsvWriter.addRow(SimulatedAnnealingAlgorithm.class.getSimpleName(), simulatedAnnealingAverageResult, simulatedAnnealingMinimumResult, simulatedAnnealingAverageTime, simulatedAnnealingStandardDeviation, simulatedAnnealingEfficiency, simulatedAnnealingAverageStepNumber, simulatedAnnealingAverageVisitSolutionNumber);
+                resultTask2ToCsvWriter.addRow(TabuSearchAlgorithm.class.getSimpleName(), tabuSearchAverageResult, tabuSearchMinimumResult, tabuSearchAverageTime, tabuSearchStandardDeviation, tabuSearchEfficiency, tabuSearchAverageStepNumber, tabuSearchAverageVisitSolutionNumber);
                 resultTask2ToCsvWriter.saveFile();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -6,7 +6,7 @@ public class RandomAlgorithm {
 
     private static void shuffleXOR(int[] cities, int n) {
         for (int i = n - 1; i >= 0; i--) {
-            int id =  new Random().nextInt(i + 1);
+            int id = new Random().nextInt(i + 1);
             if (id != i) {
                 cities[id] ^= cities[i];
                 cities[i] ^= cities[id];
