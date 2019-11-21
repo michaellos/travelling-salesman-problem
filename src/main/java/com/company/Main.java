@@ -70,7 +70,7 @@ public class Main {
         System.out.println("Random: " + randomRresult);
     }
 
-    private static void generateFirstReport() {
+    private static void generateReport() {
         for (String instance : INSTANCES) {
             int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
 

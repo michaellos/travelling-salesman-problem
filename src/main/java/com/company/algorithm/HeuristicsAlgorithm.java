@@ -2,11 +2,11 @@ package com.company.algorithm;
 
 import java.util.Random;
 
-public class HeuristicsAlgorithm {
+public class HeuristicsAlgorithm extends Algorithm {
 
     public static int[] findPath(int[][] distanceMatrix, int[] greedyPath, int[][] cloneDistanceMatrix) {
 
-        for (int i = 0; i< distanceMatrix.length; i++) {
+        for (int i = 0; i < distanceMatrix.length; i++) {
             cloneDistanceMatrix[i] = distanceMatrix[i].clone();
         }
 
