@@ -21,7 +21,7 @@ public class SimulatedAnnealingAlgorithm extends Algorithm {
             int difference = getSampleDifference(distanceMatrix, path);
             maxDifference = Math.max(maxDifference, difference);
         }
-        
+
         return maxDifference;
     }
 
@@ -91,7 +91,7 @@ public class SimulatedAnnealingAlgorithm extends Algorithm {
             } else {
                 numberNoChange = 0;
             }
-        } while (numberNoChange < 10);
+        } while (numberNoChange < 100);
 
         return new ResultEntity(firstPath, bestPath, stepCounter, solutionCounter);
     }
