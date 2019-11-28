@@ -21,12 +21,12 @@ public class SimulatedAnnealingAlgorithm extends Algorithm {
             int difference = getSampleDifference(distanceMatrix, path);
             maxDifference = Math.max(maxDifference, difference);
         }
-
+        
         return maxDifference;
     }
 
     private static int getSampleDifference(int[][] distanceMatrix, int[] path) {
-        path = RandomAlgorithm.findPathForSimulatedAnnealingAlgorithm(distanceMatrix, path);
+        shuffleXOR(path, distanceMatrix.length);
         int distance = ResultCalculator.calculateTotalDistance(path, distanceMatrix);
         Random random = new Random();
         int i = random.nextInt(path.length);
@@ -97,6 +97,8 @@ public class SimulatedAnnealingAlgorithm extends Algorithm {
     }
 
     public static ResultEntity findPath(int[][] distanceMatrix, int[] path) {
+
+        generateStartingPath(distanceMatrix, path);
 
 //        Parameters
         double startingTemperature = getStartingTemperature(distanceMatrix, path);

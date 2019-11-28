@@ -19,9 +19,4 @@ public class RandomAlgorithm extends Algorithm {
         return randomPath;
     }
 
-    public static int[] findPathForSimulatedAnnealingAlgorithm(int[][] distanceMatrix, int[] randomPath) {
-        generateStartingPath(distanceMatrix, randomPath);
-
-        return randomPath;
-    }
 }
