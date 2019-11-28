@@ -13,6 +13,19 @@ import static com.company.entity.NameConstants.*;
 public class Main {
 
     public static void main(String[] args) {
+        String instance = INSTANCES.get(0);
+
+        int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
+
+        int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + instance + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
+        int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
+
+        int[] startingPath = new int[distanceMatrix.length];
+
+        ResultEntity resultEntity = TabuSearchAlgorithm.findPath(distanceMatrix, startingPath);
+
+        System.out.println(optimalDistance);
+        System.out.println(ResultCalculator.calculateTotalDistance(resultEntity.getFinalPath(), distanceMatrix));
     }
 
     private static void testSimulatedAnnealing() {
@@ -34,7 +47,7 @@ public class Main {
         int greedyRresult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
 
 
-        int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
+        int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath, 1);
         int randomRresult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
 
         System.out.println("Instance: " + instance);
@@ -61,7 +74,7 @@ public class Main {
         greedyRresult = ResultCalculator.calculateTotalDistance(greedyPath, distanceMatrix) - optimalDistance;
 
 
-        randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
+        randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath, 1);
         randomRresult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
 
         System.out.println("Instance: " + instance);
@@ -80,6 +93,71 @@ public class Main {
             int[] startingPath = new int[distanceMatrix.length];
             int[][] cloneDistanceMatrix = new int[distanceMatrix.length][];
 
+            // pomiar czasu
+
+            int counter = 0;
+            long endTime;
+            long startTime = System.currentTimeMillis();
+            do {
+                GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float greedyAverageTime = (float) (endTime - startTime) / counter;
+
+            counter = 0;
+            startTime = System.currentTimeMillis();
+            do {
+                SteepestLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float steepestAverageTime = (float) (endTime - startTime) / counter;
+
+            float randomBorderTime = Math.max(greedyAverageTime, steepestAverageTime);
+
+            counter = 0;
+            startTime = System.currentTimeMillis();
+            do {
+                RandomAlgorithm.findPath(distanceMatrix, startingPath, randomBorderTime);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float randomAverageTime = (float) (endTime - startTime) / counter;
+
+            counter = 0;
+            startTime = System.currentTimeMillis();
+            do {
+                HeuristicAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float heuristicAverageTime = (float) (endTime - startTime) / counter;
+
+            counter = 0;
+            startTime = System.currentTimeMillis();
+            do {
+                SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float simulatedAnnealingAverageTime = (float) (endTime - startTime) / counter;
+
+            counter = 0;
+            startTime = System.currentTimeMillis();
+            do {
+                TabuSearchAlgorithm.findPath(distanceMatrix, startingPath);
+                endTime = System.currentTimeMillis();
+                counter++;
+            } while (endTime - startTime < 1000 || counter < 10);
+
+            float tabuSearchAverageTime = (float) (endTime - startTime) / counter;
+
             //pomiar jakości
 
             int greedySumResult = 0;
@@ -87,7 +165,7 @@ public class Main {
             int greedySumStepNumber = 0;
             int greedySumVisitSolutionNumber = 0;
             int[] greedyResults = new int[10];
-            int counter = 0;
+            counter = 0;
             do {
                 ResultEntity resultEntity = GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
                 int[] greedyPath = resultEntity.getFinalPath();
@@ -135,7 +213,7 @@ public class Main {
             int[] randomResults = new int[10];
             counter = 0;
             do {
-                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
+                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath, randomBorderTime);
                 int randomResult = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
                 randomResults[counter] = randomResult;
                 randomSumResult += randomResult;
@@ -152,7 +230,7 @@ public class Main {
             int[] heuristicResults = new int[10];
             counter = 0;
             do {
-                int[] heuristicPath = HeuristicsAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
+                int[] heuristicPath = HeuristicAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
                 int heuristicResult = ResultCalculator.calculateTotalDistance(heuristicPath, distanceMatrix) - optimalDistance;
                 heuristicResults[counter] = heuristicResult;
                 heuristicSumResult += heuristicResult;
@@ -212,71 +290,6 @@ public class Main {
             float tabuSearchAverageStepNumber = (float) tabuSearchSumStepNumber / counter;
             float tabuSearchAverageVisitSolutionNumber = (float) tabuSearchSumVisitSolutionNumber / counter;
 
-            // pomiar czasu
-
-            counter = 0;
-            long endTime;
-            long startTime = System.currentTimeMillis();
-            do {
-                GreedyLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
-                endTime = System.currentTimeMillis();
-                counter++;
-            } while (endTime - startTime < 1000 || counter < 10);
-
-            float greedyAverageTime = (float) (endTime - startTime) / counter;
-
-            counter = 0;
-            startTime = System.currentTimeMillis();
-            do {
-                SteepestLocalSearchAlgorithm.findPath(distanceMatrix, startingPath);
-                endTime = System.currentTimeMillis();
-                counter++;
-            } while (endTime - startTime < 1000 || counter < 10);
-
-            float steepestAverageTime = (float) (endTime - startTime) / counter;
-
-            float randomBorderTime = Math.max(greedyAverageTime, steepestAverageTime);
-
-            counter = 0;
-            startTime = System.currentTimeMillis();
-            do {
-                RandomAlgorithm.findPath(distanceMatrix, startingPath);
-                endTime = System.currentTimeMillis();
-                counter++;
-            } while (endTime - startTime < randomBorderTime || counter < 10);
-
-            float randomAverageTime = (float) (endTime - startTime) / counter;
-
-            counter = 0;
-            startTime = System.currentTimeMillis();
-            do {
-                HeuristicsAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
-                endTime = System.currentTimeMillis();
-                counter++;
-            } while (endTime - startTime < 1000 || counter < 10);
-
-            float heuristicAverageTime = (float) (endTime - startTime) / counter;
-
-            counter = 0;
-            startTime = System.currentTimeMillis();
-            do {
-                SimulatedAnnealingAlgorithm.findPath(distanceMatrix, startingPath);
-                endTime = System.currentTimeMillis();
-                counter++;
-            } while (endTime - startTime < 1000 || counter < 10);
-
-            float simulatedAnnealingAverageTime = (float) (endTime - startTime) / counter;
-
-            counter = 0;
-            startTime = System.currentTimeMillis();
-            do {
-                TabuSearchAlgorithm.findPath(distanceMatrix, startingPath);
-                endTime = System.currentTimeMillis();
-                counter++;
-            } while (endTime - startTime < 1000 || counter < 10);
-
-            float tabuSearchAverageTime = (float) (endTime - startTime) / counter;
-
             // jakość w czasie (średni błąd bezwzględny / średni czas działania)
 
             float greedyEfficiency = greedyAverageResult / greedyAverageTime;
@@ -291,7 +304,7 @@ public class Main {
                 resultTask2ToCsvWriter.addRow(GreedyLocalSearchAlgorithm.class.getSimpleName(), greedyAverageResult, greedyMinimumResult, greedyAverageTime, greedyStandardDeviation, greedyEfficiency, greedyAverageStepNumber, greedyAverageVisitSolutionNumber);
                 resultTask2ToCsvWriter.addRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestAverageResult, steepestMinimumResult, steepestAverageTime, steepestStandardDeviation, steepestEfficiency, steepestAverageStepNumber, steepestAverageVisitSolutionNumber);
                 resultTask2ToCsvWriter.addRow(RandomAlgorithm.class.getSimpleName(), randomAverageResult, randomMinimumResult, randomAverageTime, randomStandardDeviation, randomEfficiency, 0, 0);
-                resultTask2ToCsvWriter.addRow(HeuristicsAlgorithm.class.getSimpleName(), heuristicAverageResult, heuristicMinimumResult, heuristicAverageTime, heuristicStandardDeviation, heuristicEfficiency, 0, 0);
+                resultTask2ToCsvWriter.addRow(HeuristicAlgorithm.class.getSimpleName(), heuristicAverageResult, heuristicMinimumResult, heuristicAverageTime, heuristicStandardDeviation, heuristicEfficiency, 0, 0);
                 resultTask2ToCsvWriter.addRow(SimulatedAnnealingAlgorithm.class.getSimpleName(), simulatedAnnealingAverageResult, simulatedAnnealingMinimumResult, simulatedAnnealingAverageTime, simulatedAnnealingStandardDeviation, simulatedAnnealingEfficiency, simulatedAnnealingAverageStepNumber, simulatedAnnealingAverageVisitSolutionNumber);
                 resultTask2ToCsvWriter.addRow(TabuSearchAlgorithm.class.getSimpleName(), tabuSearchAverageResult, tabuSearchMinimumResult, tabuSearchAverageTime, tabuSearchStandardDeviation, tabuSearchEfficiency, tabuSearchAverageStepNumber, tabuSearchAverageVisitSolutionNumber);
                 resultTask2ToCsvWriter.saveFile();
@@ -405,7 +418,7 @@ public class Main {
             double[] randomPathSimilarities = new double[100];
             counter = 0;
             do {
-                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath);
+                int[] randomPath = RandomAlgorithm.findPath(distanceMatrix, startingPath, randomBorderTime);
                 randomResults[counter] = ResultCalculator.calculateTotalDistance(randomPath, distanceMatrix) - optimalDistance;
                 randomPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(randomPath, optimalPermutation);
                 counter++;
@@ -415,7 +428,7 @@ public class Main {
             double[] heuristicPathSimilarities = new double[100];
             counter = 0;
             do {
-                int[] heuristicPath = HeuristicsAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
+                int[] heuristicPath = HeuristicAlgorithm.findPath(distanceMatrix, startingPath, cloneDistanceMatrix);
                 heuristicResults[counter] = ResultCalculator.calculateTotalDistance(heuristicPath, distanceMatrix) - optimalDistance;
                 heuristicPathSimilarities[counter] = ResultCalculator.calculatePathSimilarity(heuristicPath, optimalPermutation);
                 counter++;
@@ -429,8 +442,8 @@ public class Main {
                 resultTask5ToCsvWriter.addSimilaritiesToRow(SteepestLocalSearchAlgorithm.class.getSimpleName(), steepestPathSimilarities);
                 resultTask5ToCsvWriter.addResultsToRow(RandomAlgorithm.class.getSimpleName(), randomResults);
                 resultTask5ToCsvWriter.addSimilaritiesToRow(RandomAlgorithm.class.getSimpleName(), randomPathSimilarities);
-                resultTask5ToCsvWriter.addResultsToRow(HeuristicsAlgorithm.class.getSimpleName(), heuristicResults);
-                resultTask5ToCsvWriter.addSimilaritiesToRow(HeuristicsAlgorithm.class.getSimpleName(), heuristicPathSimilarities);
+                resultTask5ToCsvWriter.addResultsToRow(HeuristicAlgorithm.class.getSimpleName(), heuristicResults);
+                resultTask5ToCsvWriter.addSimilaritiesToRow(HeuristicAlgorithm.class.getSimpleName(), heuristicPathSimilarities);
                 resultTask5ToCsvWriter.saveFile();
             } catch (IOException e) {
                 e.printStackTrace();

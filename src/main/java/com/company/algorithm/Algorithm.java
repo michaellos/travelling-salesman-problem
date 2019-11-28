@@ -47,7 +47,7 @@ public abstract class Algorithm {
         }
     }
 
-    private static void shuffleXOR(int[] cities, int n) {
+    static void shuffleXOR(int[] cities, int n) {
         for (int i = n - 1; i >= 0; i--) {
             int id = new Random().nextInt(i + 1);
             if (id != i) {

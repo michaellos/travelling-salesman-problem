@@ -11,11 +11,12 @@ import java.util.List;
 public class TabuSearchAlgorithm extends Algorithm {
 
     private static int cadenceValue;
-    private static final int NOT_IMPROVED_SOLUTION_VALUE = 10;
+    private static final int NOT_IMPROVED_SOLUTION_VALUE = 100;
 
     public static ResultEntity findPath(int[][] distanceMatrix, int[] tabuSearchPath) {
         int n = distanceMatrix.length;
-        cadenceValue = n / 4;
+        cadenceValue = n / 5;
+        int candidateListSize = n / 2;
 
         generateStartingPath(distanceMatrix, tabuSearchPath);
 
@@ -39,7 +40,7 @@ public class TabuSearchAlgorithm extends Algorithm {
                 }
             }
             candidateList.sort(Comparator.comparingInt(TabuSearchMove::getDistance));
-            candidateList = candidateList.subList(0, n / 10);
+            candidateList = candidateList.subList(0, candidateListSize);
             do {
                 TabuSearchMove candidate = candidateList.get(0);
                 if (!isTabu(tabuList, candidate.getCityA(), candidate.getCityB()) || candidate.getDistance() < distance) {

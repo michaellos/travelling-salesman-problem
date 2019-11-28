@@ -2,7 +2,7 @@ package com.company.algorithm;
 
 import java.util.Random;
 
-public class HeuristicsAlgorithm extends Algorithm {
+public class HeuristicAlgorithm extends Algorithm {
 
     public static int[] findPath(int[][] distanceMatrix, int[] greedyPath, int[][] cloneDistanceMatrix) {
 
