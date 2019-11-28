@@ -26,7 +26,7 @@ public class SimulatedAnnealingAlgorithm extends Algorithm {
     }
 
     private static int getSampleDifference(int[][] distanceMatrix, int[] path) {
-        path = RandomAlgorithm.findPath(distanceMatrix, path);
+        path = RandomAlgorithm.findPathForSimulatedAnnealingAlgorithm(distanceMatrix, path);
         int distance = ResultCalculator.calculateTotalDistance(path, distanceMatrix);
         Random random = new Random();
         int i = random.nextInt(path.length);
