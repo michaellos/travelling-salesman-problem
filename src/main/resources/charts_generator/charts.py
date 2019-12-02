@@ -156,13 +156,14 @@ def task_2():
     plt.close(fig1)
 
     fig1, ax1 = plt.subplots(figsize=(10, 6))
+    plt.yscale("log")
     ax1.plot(n_in_instances, average_time_greedy, linestyle='solid', markersize=4, marker='o')
     ax1.plot(n_in_instances, average_time_steepest, linestyle='dashdot', markersize=4, marker='D')
     ax1.plot(n_in_instances, average_time_random, linestyle='dashed', markersize=4, marker='^')
     ax1.plot(n_in_instances, average_time_heuristics, linestyle='dotted', markersize=4, marker='x')
     ax1.plot(n_in_instances, average_time_simulated_annealing, markersize=4, linestyle=(0, (1, 10)), marker=10)
     ax1.plot(n_in_instances, average_time_tabu, markersize=4, linestyle=(0, (5, 10)), marker=7)
-    ax1.set_ylabel("Średni czas działania algorytmu [ms]")
+    ax1.set_ylabel("Średni czas działania algorytmu [ms] - skala logarytmiczna")
     ax1.set_xlabel("Rozmiar instancji")
     plt.legend(algorithm_names)
     save_plot2(plt, "AverageTime", output_folder)
@@ -245,7 +246,7 @@ def task_4():
 def task_5():
     output_folder = "Task 5/"
     algorithm_name = ["GreedyLocalSearchAlgorithm", "SteepestLocalSearchAlgorithm", "RandomAlgorithm",
-                      "HeuristicsAlgorithm"]
+                      "HeuristicAlgorithm"]
     for i in instances:
         data = pd.read_csv('../out/results_task_5_' + i + '.csv', sep=',')
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 9))
