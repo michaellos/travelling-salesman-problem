@@ -13,23 +13,11 @@ import static com.company.entity.NameConstants.*;
 public class Main {
 
     public static void main(String[] args) {
-        String instance = INSTANCES.get(0);
-
-        int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
-
-        int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + instance + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
-        int optimalDistance = ResultCalculator.calculateTotalDistance(optimalPermutation, distanceMatrix);
-
-        int[] startingPath = new int[distanceMatrix.length];
-
-        ResultEntity resultEntity = TabuSearchAlgorithm.findPath(distanceMatrix, startingPath);
-
-        System.out.println(optimalDistance);
-        System.out.println(ResultCalculator.calculateTotalDistance(resultEntity.getFinalPath(), distanceMatrix));
+        generateReport();
     }
 
     private static void testSimulatedAnnealing() {
-        String instance = INSTANCES.get(1);
+        String instance = INSTANCES.get(5);
 
         int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
 
@@ -85,6 +73,7 @@ public class Main {
 
     private static void generateReport() {
         for (String instance : INSTANCES) {
+            System.out.println(instance);
             int[][] distanceMatrix = DatasetParser.loadDatasetEuc2D(new File(EUC_2D_INSTANCES_PATH + instance + INSTANCE_EXTENSION).getAbsolutePath());
 
             int[] optimalPermutation = DatasetParser.loadOptimalPermutation(new File(EUC_2D_OPTIMAL_RESULT_PATH + instance + OPTIMAL_RESULT_EXTENSION).getAbsolutePath());
@@ -244,8 +233,8 @@ public class Main {
 
             int simulatedAnnealingSumResult = 0;
             int simulatedAnnealingMinimumResult = Integer.MAX_VALUE;
-            int simulatedAnnealingSumStepNumber = 0;
-            int simulatedAnnealingSumVisitSolutionNumber = 0;
+            long simulatedAnnealingSumStepNumber = 0;
+            long simulatedAnnealingSumVisitSolutionNumber = 0;
             int[] simulatedAnnealingResults = new int[10];
             counter = 0;
             do {

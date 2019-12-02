@@ -45,8 +45,8 @@ public class SimulatedAnnealingAlgorithm extends Algorithm {
         generateStartingPath(distanceMatrix, path);
 
         int[] firstPath = path.clone();
-        int stepCounter = 0;
-        int solutionCounter = 0;
+        long stepCounter = 0;
+        long solutionCounter = 0;
         int[] bestPath = path.clone();
         int distance = ResultCalculator.calculateTotalDistance(path, distanceMatrix);
         int bestDistance = distance;
@@ -91,7 +91,7 @@ public class SimulatedAnnealingAlgorithm extends Algorithm {
             } else {
                 numberNoChange = 0;
             }
-        } while (numberNoChange < 100);
+        } while (numberNoChange < 10);
 
         return new ResultEntity(firstPath, bestPath, stepCounter, solutionCounter);
     }

@@ -4,10 +4,10 @@ public class ResultEntity {
 
     private int[] startPath;
     private int[] finalPath;
-    private int stepNumber;
-    private int visitSolutionNumber;
+    private long stepNumber;
+    private long visitSolutionNumber;
 
-    public ResultEntity(int[] startPath, int[] finalPath, int stepNumber, int visitSolutionNumber) {
+    public ResultEntity(int[] startPath, int[] finalPath, long stepNumber, long visitSolutionNumber) {
         this.startPath = startPath;
         this.finalPath = finalPath;
         this.stepNumber = stepNumber;
@@ -22,11 +22,11 @@ public class ResultEntity {
         return finalPath;
     }
 
-    public int getStepNumber() {
+    public long getStepNumber() {
         return stepNumber;
     }
 
-    public int getVisitSolutionNumber() {
+    public long getVisitSolutionNumber() {
         return visitSolutionNumber;
     }
 }
